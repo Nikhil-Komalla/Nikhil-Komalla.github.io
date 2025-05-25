@@ -1,0 +1,75 @@
+/* style.css */
+:root {
+  --primary: #1e407c;
+  --light: #ffffff;
+  --text: #333;
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: var(--light);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+header {
+  background: var(--primary);
+  color: var(--light);
+  padding: 2rem 0;
+}
+
+header h1 {
+  font-size: 2.5rem;
+}
+
+header .tagline {
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+nav {
+  margin-top: 1rem;
+}
+
+nav a {
+  color: var(--light);
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+section {
+  border-bottom: 1px solid #ddd;
+}
+
+ul {
+  list-style: disc inside;
+  margin-bottom: 1.5rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: #f4f4f4;
+  font-size: 0.9rem;
+}
