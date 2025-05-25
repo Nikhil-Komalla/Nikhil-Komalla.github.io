@@ -1,75 +1,364 @@
 /* style.css */
 :root {
-  --primary: #1e407c;
-  --light: #ffffff;
-  --text: #333;
+    --beaver-blue: #1e407c;
+    --white-out: #ffffff;
+    --light-grey: #f8f9fa; /* For subtle background variations */
+    --dark-text: #333333;
+    --medium-grey: #555555;
+    --accent-blue-light: #3b5998; /* A slightly lighter, vibrant blue for accents if needed */
+    
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Open Sans', sans-serif;
 }
 
 * {
-  margin: 0; padding: 0; box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  color: var(--text);
-  background: var(--light);
-  line-height: 1.6;
+    font-family: var(--font-secondary);
+    color: var(--dark-text);
+    background-color: var(--white-out);
+    line-height: 1.7;
+    font-size: 16px;
 }
 
 .container {
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 0;
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
-header {
-  background: var(--primary);
-  color: var(--light);
-  padding: 2rem 0;
+/* --- Header & Navbar --- */
+#header {
+    background-color: var(--white-out);
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
 }
 
-header h1 {
-  font-size: 2.5rem;
+#header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-header .tagline {
-  margin-top: 0.5rem;
-  font-style: italic;
+#logo h1 {
+    color: var(--beaver-blue);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.8rem;
 }
 
-nav {
-  margin-top: 1rem;
+#navbar ul {
+    list-style: none;
+    display: flex;
 }
 
-nav a {
-  color: var(--light);
-  margin-right: 1rem;
-  text-decoration: none;
-  font-weight: bold;
+#navbar ul li {
+    margin-left: 25px;
 }
 
-nav a:hover {
-  text-decoration: underline;
+#navbar ul li a {
+    text-decoration: none;
+    color: var(--beaver-blue);
+    font-family: var(--font-primary);
+    font-weight: 400;
+    transition: color 0.3s ease;
+    padding-bottom: 5px; /* For border effect */
+    border-bottom: 2px solid transparent; /* For hover effect */
 }
 
-h2 {
-  color: var(--primary);
-  margin-bottom: 1rem;
+#navbar ul li a:hover,
+#navbar ul li a.active {
+    color: var(--accent-blue-light);
+    border-bottom: 2px solid var(--accent-blue-light);
 }
 
-section {
-  border-bottom: 1px solid #ddd;
+/* --- Hero Section --- */
+#hero {
+    background-color: var(--beaver-blue); /* Fallback color */
+    /* Consider a subtle gradient or a background image */
+    /* Example background image (replace with your own or from sites like unsplash.com, pexels.com, or specialized science image sites [5, 7]): */
+    /* background-image: linear-gradient(rgba(30, 64, 124, 0.85), rgba(30, 64, 124, 0.95)), url('path_to_your_hd_computational_materials_image.jpg'); */
+    background-image: linear-gradient(to right bottom, #1e407c, #2a5298); /* Beaver Blue gradient */
+    background-size: cover;
+    background-position: center;
+    color: var(--white-out);
+    height: 85vh; /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+    margin-top: 70px; /* Adjust based on header height */
 }
 
-ul {
-  list-style: disc inside;
-  margin-bottom: 1.5rem;
+.hero-content h2 {
+    font-family: var(--font-primary);
+    font-size: 2.8rem; /* Responsive font size can be added */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem 0;
-  background: #f4f4f4;
-  font-size: 0.9rem;
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 300;
 }
+
+.btn {
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--white-out);
+    color: var(--beaver-blue);
+    border: 2px solid var(--white-out);
+}
+
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--white-out);
+}
+
+/* --- General Section Styling --- */
+.section-padding {
+    padding: 60px 0;
+}
+
+.section-padding:nth-child(even) { /* Alternating section backgrounds for subtle separation */
+    background-color: var(--light-grey);
+}
+
+.section-title {
+    font-family: var(--font-primary);
+    color: var(--beaver-blue);
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.section-title::after { /* Underline effect for titles */
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--beaver-blue);
+    margin: 10px auto 0;
+}
+
+/* --- About Section --- */
+.about-content {
+    display: flex;
+    flex-wrap: wrap; /* For responsiveness */
+    gap: 30px; /* Space between text and image if image is added */
+    align-items: center;
+}
+
+.about-text {
+    flex: 1; /* Takes available space */
+    text-align: justify;
+}
+
+.about-text p {
+    margin-bottom: 15px;
+}
+
+/* --- Experience & Education Section --- */
+.experience-item, .education-item {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.experience-item:last-child, .education-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.experience-item h3, .education-item h3 {
+    font-family: var(--font-primary);
+    color: var(--beaver-blue);
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.experience-subheading {
+    font-style: italic;
+    color: var(--medium-grey);
+    margin-bottom: 10px;
+}
+
+.experience-item ul, .education-item ul { /* Though education doesn't use ul here currently */
+    list-style-position: outside;
+    margin-left: 20px;
+}
+
+.experience-item ul li, .education-item ul li {
+    margin-bottom: 8px;
+}
+
+/* --- Skills Section --- */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.skill-category {
+    background-color: var(--white-out);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(30, 64, 124, 0.15);
+}
+
+.skill-category h3 {
+    font-family: var(--font-primary);
+    color: var(--beaver-blue);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--light-grey);
+    padding-bottom: 10px;
+}
+
+.skill-category ul {
+    list-style: none; /* Remove default bullets */
+    padding-left: 0;
+}
+
+.skill-category ul li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px; /* Space for custom bullet */
+}
+
+.skill-category ul li::before { /* Custom bullet */
+    content: '✓'; /* Or any other icon/character */
+    color: var(--beaver-blue);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* --- Publications & Awards Section --- */
+.publications-list, .awards-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.publications-list li, .awards-list li {
+    margin-bottom: 15px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.publications-list li::before, .awards-list li::before {
+    content: "▶"; /* Or "❖", "●" */
+    position: absolute;
+    left: 0;
+    color: var(--beaver-blue);
+    font-size: 0.9em;
+}
+
+.publications-list em { /* For journal names */
+    font-style: italic;
+    color: var(--medium-grey);
+}
+
+/* --- Contact Section --- */
+#contact {
+    text-align: center;
+}
+
+#contact p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+#contact a {
+    color: var(--beaver-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+#contact a:hover {
+    color: var(--accent-blue-light);
+    text-decoration: underline;
+}
+
+.social-link {
+    margin: 0 10px;
+}
+
+/* --- Footer --- */
+#footer {
+    background-color: var(--beaver-blue);
+    color: var(--light-grey);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    #header .container {
+        flex-direction: column;
+    }
+    #navbar ul {
+        margin-top: 10px;
+        flex-wrap: wrap; /* Allow nav items to wrap */
+        justify-content: center;
+    }
+    #navbar ul li {
+        margin: 5px 10px; /* Adjust spacing for wrapped items */
+    }
+    #hero {
+        height: auto; /* Adjust height for smaller screens */
+        padding-top: 120px; /* More space due to potentially wrapped header */
+        padding-bottom: 60px;
+    }
+    .hero-content h2 {
+        font-size: 2rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .skills-grid {
+        grid-template-columns: 1fr; /* Stack skills categories */
+    }
+}
+
+
