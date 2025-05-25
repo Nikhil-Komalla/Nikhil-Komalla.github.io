@@ -1,92 +1,182 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nikhil Komalla – Computational Materials Scientist</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil Komalla - Computational Materials Scientist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Nikhil Komalla</h1>
-      <p class="tagline">Ph.D. Candidate | Energy &amp; Mineral Engineering | Computational Materials Design</p>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#education">Education</a>
-        <a href="#experience">Experience</a>
-        <a href="#skills">Skills</a>
-        <a href="#publications">Publications</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+    <header id="header">
+        <div class="container">
+            <div id="logo">
+                <h1>Nikhil Komalla</h1>
+            </div>
+            <nav id="navbar">
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#awards">Awards</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <main>
-    <section id="about" class="container">
-      <h2>About Me</h2>
-      <p>
-        Over seven years of passion for hydrogen energy, catalysis, and advanced functional materials. 
-        Currently pursuing a Ph.D. at Penn State on green hydrogen electrocatalysts and photocatalysts using DFT &amp; MD.
-      </p>
+    <section id="hero">
+        <div class="hero-content">
+            <h2>Pioneering Sustainable Energy Solutions through Computational Materials Design</h2>
+            <p>Leveraging 7+ years of passion for hydrogen, catalysis, and advanced computational methods (DFT, MD, AI/ML) to accelerate the discovery of next-generation energy materials.</p>
+            <a href="#about" class="btn btn-primary">Learn More About My Work</a>
+        </div>
     </section>
 
-    <section id="education" class="container">
-      <h2>Education</h2>
-      <ul>
-        <li><strong>Ph.D., Energy &amp; Mineral Engineering</strong>, The Pennsylvania State University (GPA 3.54) <br/>
-            Minor: Computational Materials (Electrochemistry, Solid State, Quantum Chemistry)</li>
-        <li><strong>B.Tech., Chemical Engineering</strong>, Osmania University (GPA 8.17/10)</li>
-      </ul>
-    </section>
+    <main>
+        <section id="about" class="container section-padding">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I am a Ph.D. Candidate in Energy & Mineral Engineering at The Pennsylvania State University, with a minor in Computational Materials. My research focuses on designing and discovering novel electrocatalysts and photocatalysts for green hydrogen production using first-principles DFT simulations, molecular dynamics, and machine learning techniques.</p>
+                    <p>With a strong foundation in Chemical Engineering, Energy Engineering, and Electrochemistry, I am deeply enthusiastic about applying advanced computational tools to solve critical challenges in sustainable energy. My 7+ years of engagement with hydrogen technologies and catalysis drive my commitment to accelerating materials discovery for a cleaner energy future. I am particularly interested in advanced functional materials and their application in energy storage and conversion.</p>
+                </div>
+                <!-- Optional: Add a professional photo here
+                <div class="about-image">
+                    <img src="path_to_your_professional_photo.jpg" alt="Nikhil Komalla">
+                </div>
+                -->
+            </div>
+        </section>
 
-    <section id="experience" class="container">
-      <h2>Experience</h2>
-      <h3>Graduate Researcher, Penn State (2022–Present)</h3>
-      <ul>
-        <li>Designed Fe–Ni sulfide &amp; SrNb<sub>2</sub>O<sub>6</sub> catalysts for green H<sub>2</sub> via VASP DFT &amp; METADISE.</li>
-        <li>Mapped 100+ active sites and 11 diffusion pathways; developed reaction mechanisms.</li>
-        <li>Combined experimental-theoretical approaches for accelerated catalyst discovery.</li>
-      </ul>
-      <h3>Process R&amp;D Engineer, Krest Engineering, India (2021)</h3>
-      <ul>
-        <li>Led techno-economic analyses for fuel cells &amp; electrolysers; CSP feasibility for DRDO.</li>
-      </ul>
-    </section>
+        <section id="experience" class="container section-padding">
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-item">
+                <h3>Graduate Researcher</h3>
+                <p class="experience-subheading">The Pennsylvania State University, PA, USA | Aug 2022 – Present</p>
+                <ul>
+                    <li>Designing crystalline Fe-Ni Sulfide electrocatalysts and SrNb<sub>2</sub>O<sub>6</sub> photocatalysts for green hydrogen production via DFT (VASP) and surface characterization (METADISE).</li>
+                    <li>Identified optimal surfaces, explored over 130+ active site combinations, and developed diffusion-mediated reaction mechanisms, including 11 diffusion pathways and transition state structures.</li>
+                    <li>Leading research on synergistic experimental-theoretical approaches for accelerated catalyst material design and discovery for water splitting.</li>
+                </ul>
+            </div>
+            <div class="experience-item">
+                <h3>Graduate Teaching Assistant</h3>
+                <p class="experience-subheading">The Pennsylvania State University, PA, USA | Aug 2022 – Present</p>
+                <ul>
+                    <li>Mentored 90+ undergraduate students in Thermodynamics and Solar Energy Conversion Systems projects.</li>
+                </ul>
+            </div>
+            <div class="experience-item">
+                <h3>Process (R&D) Engineer</h3>
+                <p class="experience-subheading">Krest Engineering & Technologies Pvt. Ltd., India | Sep 2021 – Dec 2021</p>
+                <ul>
+                    <li>Led techno-economic analyses for electrochemical systems (Hydrogen Fuel Cells, Electrolysers).</li>
+                    <li>Developed strategic roadmaps for green energy transition in Refining and Petrochemical sectors.</li>
+                    <li>Delivered design basis and feasibility study for Concentrated Solar Power for Defence R&D Organisation (DRDO).</li>
+                </ul>
+            </div>
+        </section>
 
-    <section id="skills" class="container">
-      <h2>Skills &amp; Tools</h2>
-      <ul>
-        <li><strong>Programming:</strong> Python, MATLAB, Shell, Git</li>
-        <li><strong>Machine Learning &amp; AI:</strong> scikit-learn, TensorFlow, regression &amp; classification models</li>
-        <li><strong>Computational Methods:</strong> DFT (VASP), MD, Quantum Chemistry, Computational Thermodynamics</li>
-        <li><strong>Data Analysis &amp; Stats:</strong> Pandas, NumPy, Design of Experiments</li>
-        <li><strong>Others:</strong> LaTeX, Jupyter, VESTA, METADISE</li>
-      </ul>
-    </section>
+        <section id="skills" class="container section-padding">
+            <h2 class="section-title">Technical Skills & Proficiencies</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Computational Methods</h3>
+                    <ul>
+                        <li>Density Functional Theory (DFT)</li>
+                        <li>Molecular Dynamics (MD)</li>
+                        <li>Quantum Chemistry</li>
+                        <li>Computational Thermodynamics</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Programming & Software</h3>
+                    <ul>
+                        <li>Python (NumPy, Pandas, Scikit-learn)</li>
+                        <li>MATLAB</li>
+                        <li>VASP, METADISE</li>
+                        <li>Shell Scripting, Git</li>
+                        <li>Jupyter, LaTeX, VESTA</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>AI & Machine Learning</h3>
+                    <ul>
+                        <li>Regression & Classification Models</li>
+                        <li>TensorFlow (Basic Exposure)</li>
+                        <li>Data Analysis & Visualization</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Domain Expertise</h3>
+                    <ul>
+                        <li>Electrocatalysis & Photocatalysis</li>
+                        <li>Hydrogen Technologies</li>
+                        <li>Solid State Materials</li>
+                        <li>Electrochemistry</li>
+                        <li>Chemical Reaction Engineering</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-    <section id="publications" class="container">
-      <h2>Selected Publications</h2>
-      <ul>
-        <li>“FeMn(NbTa)<sub>2</sub>O<sub>6</sub> Columbite for Anion Exchange Membrane Electrolyzers,” <em>Adv. Energy Mater.</em> 2025.</li>
-        <li>“MoOx/NiMoOx Heterostructures with Pt Co-catalyst for Water Splitting,” <em>J. Colloid Interface Sci.</em> 2024.</li>
-        <li>“FeS<sub>2</sub>/TiO<sub>2</sub> Photocatalyst Insights from DFT,” <em>Phys. Chem. Chem. Phys.</em> 2024.</li>
-      </ul>
-    </section>
+        <section id="education" class="container section-padding">
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <h3>Doctor of Philosophy (Ph.D.) in Energy and Mineral Engineering</h3>
+                <p>The Pennsylvania State University, USA (Expected Aug 2026) | GPA: 3.54/4.0</p>
+                <p><em>Minor: Computational Materials</em></p>
+            </div>
+            <div class="education-item">
+                <h3>Bachelor of Technology in Chemical Engineering</h3>
+                <p>Osmania University, India (May 2021) | GPA: 8.17/10.0</p>
+            </div>
+        </section>
 
-    <section id="contact" class="container">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:nxk5431@psu.edu">nxk5431@psu.edu</a>
-         <a href="https://www.linkedin.com/in/nikhil-komalla/">LinkedIn</a> | <a href="https://scholar.google.com/citations?user=gJdg6OIAAAAJ">Google Scholar</a>
-      </p>
-    </section>
-  </main>
+        <section id="publications" class="container section-padding">
+            <h2 class="section-title">Selected Publications & Contributions</h2>
+            <ul class="publications-list">
+                <li>Bacirhonde, P. M., et al. (incl. <strong>Komalla, N.</strong>). “Understanding the Metal-Center Mediated Adsorption and Redox Mechanisms in a FeMn(NbTa)2O6 Columbite Material for Anion Exchange Membrane Water Electrolyzers.” <em>Advanced Energy Materials</em>, 2025, 2404479.</li>
+                <li>Doan, T. L. L., et al. (incl. <strong>Komalla, N.</strong>). “Molybdenum oxide/nickel molybdenum oxide heterostructures hybridized active platinum co-catalyst toward superb-efficiency water splitting catalysis." <em>Journal of Colloid Interface Science</em>, vol. 670, pp. 12–27, 2024.</li>
+                <li>Awe, O. F., et al. (incl. <strong>Komalla, N.</strong>). “Unraveling the Origin of High Photocatalytic Properties of Earth-abundant FeS2/TiO2 Heterojunction: Insights from First-Principles Density Functional Theory." <em>Phys. Chem. Chem. Phys</em>, vol. 26, 2024.</li>
+                <li>Bacirhonde, P. M., et al. (incl. <strong>Komalla, N.</strong>). “Ruthenium Engineered A2B2O6-Hybrid Columbite Ferrite for Bifunctional pH-Universal Water Splitting.” <em>Advanced Energy Materials</em>, vol. 13, no. 23, 2023.</li>
+                <li>Authored: 'How to Learn Chemical Engineering in 100 Solved problems? & Be Industry Ready' (ISBN: 978-93-5416-205-3), 2020.</li>
+            </ul>
+        </section>
 
-  <footer>
-    <div class="container">
-      <p>© 2025 Nikhil Komalla. All rights reserved.</p>
-    </div>
-  </footer>
+        <section id="awards" class="container section-padding">
+            <h2 class="section-title">Awards & Recognition</h2>
+            <ul class="awards-list">
+                <li>Frank J. Vastola and Ruth J. St. Clair Vastola Graduate Scholarship, 2025</li>
+                <li>Second Place, Oral Presentation, Penn State Energy Institute's Energy Innovations Symposium, 2025</li>
+                <li>First Place, Student Poster Presentation, Hydrogen Americas Summit & Exhibition, 2024</li>
+                <li>Second Place, Graduate Research Exhibition, Penn State, 2023 (Project: 'Computer-Accelerated Research: Unlocking the Potential of Green Hydrogen')</li>
+                <li>Second Place, ‘Azeotropy Chemathon' Modeling Competition, IIT Bombay, 2021</li>
+            </ul>
+        </section>
+        
+        <section id="contact" class="container section-padding">
+            <h2 class="section-title">Get In Touch</h2>
+            <p>I'm always excited to discuss new research, collaborations, or opportunities in computational materials science and sustainable energy.</p>
+            <p>
+                Email: <a href="mailto:nxk5431@psu.edu">nxk5431@psu.edu</a> <br>
+                Phone: +1 (814) 321-7864 <br>
+                <a href="https://www.linkedin.com/" target="_blank" class="social-link">LinkedIn</a> | 
+                <a href="https://scholar.google.com/" target="_blank" class="social-link">Google Scholar</a>
+            </p>
+        </section>
+    </main>
+
+    <footer id="footer">
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Nikhil Komalla. All Rights Reserved. Designed with passion.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
+
