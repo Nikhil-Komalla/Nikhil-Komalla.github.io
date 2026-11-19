@@ -840,7 +840,7 @@ function buildHackathonFlowSvg(hack) {
         const titleY = hasSub ? n.y + n.h / 2 - 4 : n.y + n.h / 2 + 4;
         const subY = n.y + n.h / 2 + 13;
         return `
-            <g class="flow-node${idx === 0 ? " active-node" : ""}" data-node-id="${escapeHtml(n.id)}" data-node-idx="${idx}" tabindex="0" role="button" aria-label="${escapeHtml(n.title)}: ${escapeHtml(n.sub || "")}">
+            <g class="flow-node flow-role-${escapeHtml(n.role)}${idx === 0 ? " active-node" : ""}" data-node-id="${escapeHtml(n.id)}" data-node-idx="${idx}" tabindex="0" role="button" aria-label="${escapeHtml(n.title)}: ${escapeHtml(n.sub || "")}">
                 <rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="10" fill="${st.fill}" stroke="${st.stroke}" stroke-width="2"/>
                 <rect x="${n.x}" y="${n.y}" width="${n.w}" height="6" rx="3" fill="${st.stroke}"/>
                 <text x="${cx}" y="${titleY}" text-anchor="middle" fill="${st.header}" font-size="11.5" font-weight="700" font-family="Poppins, sans-serif">${escapeHtml(n.title)}</text>
@@ -1628,6 +1628,64 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function initThemeToggle() {
+        const toggleBtn = document.getElementById("theme-toggle");
+        const STORAGE_KEY = "nk_theme_override";
+
+        function getTimeTheme() {
+            const hr = new Date().getHours();
+            return (hr >= 6 && hr < 19) ? "light" : "dark";
+        }
+
+        function getSavedOverride() {
+            try {
+                const v = localStorage.getItem(STORAGE_KEY);
+                return (v === "dark" || v === "light") ? v : null;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function applyTheme(theme, isAuto) {
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.dataset.themeMode = isAuto ? "auto" : "manual";
+            if (!toggleBtn) return;
+
+            const isDark = theme === "dark";
+            const iconClass = isDark ? "fas fa-sun" : "fas fa-moon";
+            const labelText = isAuto ? "Auto" : (isDark ? "Dark" : "Light");
+            toggleBtn.innerHTML = `<i class="${iconClass}" aria-hidden="true"></i><span class="theme-toggle-label">${labelText}</span>`;
+            toggleBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
+            toggleBtn.title = isAuto
+                ? `Auto mode (${isDark ? "Night" : "Day"}: ${isDark ? "Dark" : "Light"}; 6 AM–7 PM light, 7 PM–6 AM dark). Click to override.`
+                : `Manual ${labelText} mode. Click to switch; double-click to return to time-based Auto.`;
+        }
+
+        const initialSaved = getSavedOverride();
+        applyTheme(initialSaved || getTimeTheme(), !initialSaved);
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", () => {
+                const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+                const next = current === "dark" ? "light" : "dark";
+                try { localStorage.setItem(STORAGE_KEY, next); } catch (_) {}
+                applyTheme(next, false);
+            });
+
+            toggleBtn.addEventListener("dblclick", () => {
+                try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+                applyTheme(getTimeTheme(), true);
+            });
+        }
+
+        window.setInterval(() => {
+            if (!getSavedOverride()) {
+                applyTheme(getTimeTheme(), true);
+            }
+        }, 300000);
+    }
+
+    initThemeToggle();
     initHeroLatticeCanvas();
     initHackathonsShowcase();
     initPublications();

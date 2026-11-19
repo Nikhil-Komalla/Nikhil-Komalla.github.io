@@ -7,6 +7,26 @@
     <title>Nikhil Komalla — Computational Materials Scientist</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        (function () {
+            var theme = "light", mode = "auto";
+            try {
+                var saved = localStorage.getItem("nk_theme_override");
+                if (saved === "dark" || saved === "light") {
+                    theme = saved;
+                    mode = "manual";
+                } else {
+                    var hr = new Date().getHours();
+                    theme = (hr >= 6 && hr < 19) ? "light" : "dark";
+                }
+            } catch (_) {
+                var hrFallback = new Date().getHours();
+                theme = (hrFallback >= 6 && hrFallback < 19) ? "light" : "dark";
+            }
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.dataset.themeMode = mode;
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,6 +45,10 @@
                     <li><a href="#news">News</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
+                <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Switch color theme" title="Auto by local time (click to switch; double-click for auto)">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                    <span class="theme-toggle-label">Auto</span>
+                </button>
                 <button id="mobile-menu-toggle" aria-label="Toggle menu">
                     <i class="fas fa-bars"></i>
                 </button>
