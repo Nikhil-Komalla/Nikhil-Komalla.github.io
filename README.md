@@ -6,9 +6,9 @@ Research group: [Materials & Minerals Theory (MMT) Group](https://sites.google.c
 
 ## Structure
 
-- `index.html` — Single-page portfolio featuring Hero (**Open to Work • Available Summer 2027**), About, Education, Experience, Technical Toolkit (**DFT, AIMD, Classical MD with MLIPs, AI for Science, HPC**), Highlighted Publications, Hackathons (**AtomInfer**, **Usefulness Boundary Hub `osi-mlips`**, **PCM Cold Transportation**), Interactive Resume Studio (**Uploaded PDF + 5-Track Live LaTeX Customizer**), Scrollable News / LinkedIn Activity Tab, and Contact.
-- `style.css` — Responsive Penn State Beaver Blue styling, hackathon grid, LaTeX preview sheet, and scrollable carousel/vertical News controls.
-- `script.js` — Scroll spy, interactive publication filters, hackathon/news loaders, and live LaTeX resume generator with `.tex` download, clipboard copy, Overleaf launch, and PDF print export.
+- `index.html` — Single-page portfolio featuring Hero (**Edge-Interactive Crystal/Defect & Doping Lattice** + **Graduating May 2027**), About, Education, Experience, Technical Toolkit (**VASP, Quantum ESPRESSO, PySCF, AIMD, Classical MD via LAMMPS, Thermodynamics/Kinetics/TST, categorized FairChem/MACE/AQCat/UPET/MatterSim MLIPs + Matbench Discovery & CatBench benchmarks, HPC**), Highlighted Publications, Interactive Hackathons Workbench (**AtomInfer**, **Usefulness Boundary Hub `osi-mlips`**, **MIT Energy & Climate Hack COMSOL Problem Statement**), Resume Studio (**Uploaded PDF + 1-Page Jake's Resume LaTeX Customizer across 5 Tracks**), Scrollable News / LinkedIn Activity Tab, and Contact.
+- `style.css` — Responsive Penn State Beaver Blue styling, edge-safe hero canvas layout, split-view hackathon stage with interactive SVG flowcharts, compact 1-page Jake's Resume sheet, and scrollable carousel/vertical News controls.
+- `script.js` — Edge-only crystal disorder & substitutional doping canvas, interactive hover/click hackathon SVG flowcharts, scroll spy, publication filters, news loader, and 1-page Jake's Resume LaTeX generator with `.tex` download, clipboard copy, Overleaf launch, and PDF print export.
 - `resume/Nikhil Komalla Resume.pdf` — Uploaded PDF resume rendered directly inside the Resume section.
 - `assets/publications.json`, `assets/news.json`, `assets/resume_data.json` — Structured data powering the Publications, News, and Live LaTeX Resume Studio sections.
 

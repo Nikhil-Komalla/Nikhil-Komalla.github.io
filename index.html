@@ -35,13 +35,14 @@
     <!-- Hero Section -->
     <section id="hero">
         <div class="hero-overlay"></div>
+        <canvas id="hero-lattice-canvas" aria-hidden="true"></canvas>
         <div class="hero-content container">
             <div class="availability-badge">
                 <span class="status-dot" aria-hidden="true"></span>
-                Open to Work &bull; Available Summer 2027
+                Open to Work &bull; Graduating May 2027
             </div>
             <h1>Pioneering Energy Futures with Computational Materials Science</h1>
-            <p class="subtitle">Ph.D. Candidate in Penn State's <a href="https://sites.google.com/view/nelsondzade/home" target="_blank" rel="noopener noreferrer" class="hero-inline-link">Materials &amp; Minerals Theory (MMT) Group</a> combining spin-polarized DFT, AIMD, equivariant &amp; magnetic MLIPs, and classical MLIP-MD for green hydrogen and clean energy discovery.</p>
+            <p class="subtitle">Ph.D. Candidate in Penn State's <a href="https://sites.google.com/view/nelsondzade/home" target="_blank" rel="noopener noreferrer" class="hero-inline-link">Materials &amp; Minerals Theory (MMT) Group</a> combining spin-polarized DFT, AIMD, FairChem &amp; MACE suite MLIPs, and classical MD (LAMMPS) for green hydrogen and clean energy discovery.</p>
             <div class="hero-actions">
                 <a href="#resume" class="btn btn-primary">Interactive Resume &amp; LaTeX</a>
                 <a href="#publications" class="btn btn-outline">Publications</a>
@@ -56,6 +57,8 @@
                 <a href="mailto:nxk5431@psu.edu" aria-label="Email"><i class="fas fa-envelope"></i></a>
             </div>
         </div>
+        <span class="hero-edge-hint hero-edge-hint-left" aria-hidden="true">Left edge &middot; Crystal &rarr; Amorphous Defect</span>
+        <span class="hero-edge-hint hero-edge-hint-right" aria-hidden="true">Right edge &middot; Substitutional Doping</span>
     </section>
 
     <main>
@@ -90,7 +93,7 @@
                     <div class="education-item">
                         <div class="education-icon"><i class="fas fa-graduation-cap"></i></div>
                         <h3>Ph.D. in Energy and Mineral Engineering</h3>
-                        <p class="institution">The Pennsylvania State University, USA (Expected Summer 2027)</p>
+                        <p class="institution">The Pennsylvania State University, USA (Aug 2022 &ndash; May 2027)</p>
                         <p><em>Minor: Computational Materials | GPA: 3.54/4.0</em></p>
                     </div>
                     <div class="education-item">
@@ -115,7 +118,7 @@
                             <p class="institution">The Pennsylvania State University, USA (Aug 2022 &ndash; Present)</p>
                             <ul>
                                 <li>Designing Fe-Ni Sulfide &amp; SrNb<sub>2</sub>O<sub>6</sub> catalysts for green H<sub>2</sub> via spin-polarized DFT (VASP, Quantum ESPRESSO), METADISE, and Ab Initio Molecular Dynamics (AIMD).</li>
-                                <li>Fine-tuning equivariant foundation &amp; magnetic MLIPs (OC25 eSEN, Magnetic MACE/mMACE) to run GPU-accelerated classical MD with MLIPs for explicit interfacial solvation and active-learning validation.</li>
+                                <li>Fine-tuning foundation and magnetic MLIPs (FairChem, MACE suite) to run GPU-accelerated classical MD (LAMMPS) for explicit interfacial solvation and active-learning validation.</li>
                                 <li>Explored 130+ active sites, mapped diffusion pathways &amp; transition states, and developed kinetics-informed reaction mechanisms bridging theory and experiment.</li>
                             </ul>
                         </div>
@@ -153,40 +156,48 @@
                     <div class="skill-card">
                         <div class="skill-icon"><i class="fas fa-atom"></i></div>
                         <h3>DFT, AIMD &amp; Classical MD</h3>
-                        <p class="skill-desc">First-principles electronic structure, dynamical solvation, and thermodynamic stability.</p>
+                        <p class="skill-desc">First-principles electronic structure, atomistic dynamics, and reaction energetics.</p>
                         <div class="skill-tags">
-                            <span>Spin-Polarized DFT (VASP)</span>
-                            <span>Quantum ESPRESSO &bull; PySCF</span>
-                            <span>Ab Initio MD (AIMD)</span>
-                            <span>Classical MD with MLIPs</span>
-                            <span>NEB Transition States</span>
-                            <span>DFT+U &bull; DFT-D3 &bull; METADISE</span>
+                            <span>DFT (VASP, Quantum ESPRESSO)</span>
+                            <span>PySCF</span>
+                            <span>AIMD</span>
+                            <span>Classical MD (LAMMPS)</span>
+                            <span>Thermodynamics &amp; Kinetics</span>
+                            <span>Transition State Theory</span>
                         </div>
                     </div>
                     <div class="skill-card">
                         <div class="skill-icon"><i class="fas fa-brain"></i></div>
                         <h3>MLIPs &amp; AI for Science</h3>
-                        <p class="skill-desc">Equivariant force-field fine-tuning, uncertainty calibration, and agentic discovery.</p>
+                        <p class="skill-desc">Flagship interatomic potentials across architectures, uncertainty quantification, and agentic discovery.</p>
                         <div class="skill-tags">
-                            <span>OC25 eSEN Fine-Tuning</span>
-                            <span>Magnetic mMACE / MACE</span>
-                            <span>GRACE &bull; MatterSim &bull; UPET</span>
-                            <span>CHGNet &bull; NequIP &bull; SevenNet</span>
-                            <span>Active Learning (&sigma; Ensemble)</span>
-                            <span>Agentic AI &bull; TensorFlow &bull; PyTorch</span>
+                            <span>MACE Suite (Equivariant MPNN)</span>
+                            <span>FairChem (eSEN / UMA)</span>
+                            <span>AQCat (Spin-Aware)</span>
+                            <span>UPET (Transformer)</span>
+                            <span>MatterSim (Universal Graph)</span>
+                            <span>Uncertainty Quantification</span>
+                            <span>Active Learning &amp; Bayesian Optimization</span>
+                            <span>Agentic AI</span>
+                            <span>PyTorch &bull; TensorFlow</span>
+                        </div>
+                        <div class="skill-benchmarks" aria-label="MLIP Benchmark Leaderboards">
+                            <span class="bench-label">Benchmarks:</span>
+                            <a href="https://matbench-discovery.materialsproject.org/" target="_blank" rel="noopener noreferrer" class="skill-bench-link"><i class="fas fa-chart-line"></i> Matbench Discovery</a>
+                            <a href="https://github.com/JinukMoon/CatBench" target="_blank" rel="noopener noreferrer" class="skill-bench-link"><i class="fas fa-flask"></i> CatBench</a>
                         </div>
                     </div>
                     <div class="skill-card">
                         <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
                         <h3>HPC, Software &amp; Simulation</h3>
-                        <p class="skill-desc">GPU cluster orchestration, scientific Python stacks, and process/CFD modeling.</p>
+                        <p class="skill-desc">GPU cluster orchestration, scientific Python stacks, and multiphysics/CFD modeling.</p>
                         <div class="skill-tags">
                             <span>Python &bull; C++ &bull; MATLAB &bull; R</span>
                             <span>ASE &bull; pymatgen &bull; LMDB</span>
-                            <span>SLURM Multi-GPU (A100)</span>
-                            <span>Bash &bull; Git &bull; MongoDB</span>
-                            <span>ANSYS CFD &bull; Aspen</span>
-                            <span>Pro/II &bull; AVEVA Simulation</span>
+                            <span>HPC &bull; SLURM Multi-GPU</span>
+                            <span>Linux &bull; Bash &bull; Git &bull; MongoDB</span>
+                            <span>COMSOL &bull; ANSYS CFD</span>
+                            <span>Aspen &bull; Pro/II &bull; AVEVA</span>
                         </div>
                     </div>
                     <div class="skill-card">
@@ -252,73 +263,56 @@
 
         <!-- Hackathons Section -->
         <section id="hackathons" class="section-padding bg-light">
-            <div class="container">
+            <div class="container container-wide">
                 <h2 class="section-title"><span>Hackathons &amp; Applied AI Builds</span></h2>
-                <p class="section-subtitle-center">Rapid scientific software prototypes built with interdisciplinary teams bridging agentic AI, MLIP uncertainty hubs, and clean thermal transport.</p>
-                <div class="hackathons-grid">
+                <p class="section-subtitle-center">Hover or click any hackathon card below to inspect its technical description on the left and interactive architecture flowchart on the right.</p>
+
+                <div class="hackathons-selector-grid" role="tablist" aria-label="Select hackathon build to inspect">
                     <!-- Hackathon 1: AtomInfer -->
-                    <article class="hackathon-card">
-                        <div>
-                            <div class="hackathon-top">
-                                <span class="hackathon-badge"><i class="fas fa-robot"></i> c0mpiled-6 Hackathon</span>
-                                <span class="hackathon-year">Agentic AI</span>
-                            </div>
-                            <h3>AtomInfer</h3>
-                            <p class="hackathon-desc">An AI agent that transforms raw experimental characterization (XRD, Raman spectra, PDF) into computation-ready atomic structures with Materials Project lookup, HRMC refinement, and an interactive Three.js crystal viewer.</p>
-                            <p class="hackathon-team">
-                                <strong>Team:</strong>
-                                <a href="https://www.linkedin.com/in/anirban-phukan277" target="_blank" rel="noopener noreferrer">Anirban Phukan</a>,
-                                <a href="https://www.linkedin.com/in/%E0%A4%A8%E0%A4%BF%E0%A4%B6%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4-%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A4%BE" target="_blank" rel="noopener noreferrer">Nishant Mishra</a>,
-                                <a href="https://www.linkedin.com/in/nikhil-komalla" target="_blank" rel="noopener noreferrer">Nikhil Komalla</a>
-                            </p>
-                            <div class="hackathon-tags">
-                                <span>FastAPI</span><span>Three.js</span><span>Materials Project</span><span>HRMC</span>
-                            </div>
+                    <article class="hackathon-card active" data-hackathon="atominfer" role="tab" aria-selected="true" tabindex="0">
+                        <div class="hackathon-top">
+                            <span class="hackathon-badge"><i class="fas fa-robot"></i> c0mpiled-6 Hackathon</span>
+                            <span class="hackathon-year">Agentic AI</span>
                         </div>
-                        <div class="hackathon-links">
-                            <a href="https://www.compiled.sh/articles/c0mpiled-6-ai-for-productivity-research#team-atominfer" target="_blank" rel="noopener noreferrer" class="hackathon-btn"><i class="fas fa-newspaper"></i> Article</a>
-                            <a href="https://github.com/nishantaMishra/atomInfer" target="_blank" rel="noopener noreferrer" class="hackathon-btn"><i class="fab fa-github"></i> GitHub</a>
-                            <a href="https://pennstateoffice365-my.sharepoint.com/:v:/g/personal/nxk5431_psu_edu/IQBhqkfxtd-WSZiakXbHsFgGAeFUHxXpHe4a8KAZfXqXNqs?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&amp;e=hu0I7Q" target="_blank" rel="noopener noreferrer" class="hackathon-btn hackathon-btn-primary"><i class="fas fa-play-circle"></i> Video Demo</a>
-                        </div>
+                        <h3>AtomInfer</h3>
+                        <p class="hackathon-card-lead">Multi-step AI agent transforming raw experimental spectra (XRD, Raman, PDF) into DFT-ready CIF &amp; VASP structures.</p>
+                        <span class="hackathon-select-cue">Hover or click to explore workflow <i class="fas fa-arrow-right"></i></span>
                     </article>
 
                     <!-- Hackathon 2: OSI-MLIPs Usefulness Boundary Hub -->
-                    <article class="hackathon-card">
-                        <div>
-                            <div class="hackathon-top">
-                                <span class="hackathon-badge"><i class="fas fa-project-diagram"></i> OSI Hackathon 2026</span>
-                                <span class="hackathon-year">Submission #147</span>
-                            </div>
-                            <h3>Usefulness Boundary Hub (<code>osi-mlips</code>)</h3>
-                            <p class="hackathon-desc">A curated MLIP checkpoint catalogue (MACE, NequIP, and foundation models) answering &ldquo;where does this potential work and where does it break?&rdquo; via Descriptive failure modes, Mechanistic notes, Bayesian UQ, and a grounded model Recommender.</p>
-                            <div class="hackathon-tags">
-                                <span>MLIP Benchmarks</span><span>Bayesian UQ</span><span>MACE / NequIP</span><span>Recommender</span>
-                            </div>
+                    <article class="hackathon-card" data-hackathon="osi" role="tab" aria-selected="false" tabindex="0">
+                        <div class="hackathon-top">
+                            <span class="hackathon-badge"><i class="fas fa-project-diagram"></i> OSI Hackathon 2026</span>
+                            <span class="hackathon-year">Submission #147</span>
                         </div>
-                        <div class="hackathon-links">
-                            <a href="https://scientificintelligence.org/campaigns/osi-hackathon-2026/submissions/147" target="_blank" rel="noopener noreferrer" class="hackathon-btn"><i class="fas fa-trophy"></i> Submission</a>
-                            <a href="https://github.com/bawiz/osi-mlips" target="_blank" rel="noopener noreferrer" class="hackathon-btn"><i class="fab fa-github"></i> GitHub</a>
-                            <a href="https://youtu.be/oFlc0wbX8-0" target="_blank" rel="noopener noreferrer" class="hackathon-btn hackathon-btn-primary"><i class="fab fa-youtube"></i> Video Demo</a>
-                        </div>
+                        <h3>Usefulness Boundary Hub (<code>osi-mlips</code>)</h3>
+                        <p class="hackathon-card-lead">Three-lens MLIP evaluation &amp; grounded recommender cataloging where checkpoints work and where they break.</p>
+                        <span class="hackathon-select-cue">Hover or click to explore workflow <i class="fas fa-arrow-right"></i></span>
                     </article>
 
-                    <!-- Hackathon 3: Phase Change Materials for Cold Transportation -->
-                    <article class="hackathon-card">
-                        <div>
-                            <div class="hackathon-top">
-                                <span class="hackathon-badge"><i class="fas fa-snowflake"></i> Clean Thermal Innovation</span>
-                                <span class="hackathon-year">GotLatent</span>
-                            </div>
-                            <h3>Phase Change Materials for Cold Transportation</h3>
-                            <p class="hackathon-desc">Designed a latent-heat thermal energy storage and phase-change material (PCM) management concept enabling low-emission temperature regulation for cold-chain logistics and refrigerated transportation.</p>
-                            <div class="hackathon-tags">
-                                <span>Phase Change Materials</span><span>Thermal Modeling</span><span>Latent Heat</span><span>Clean Logistics</span>
-                            </div>
+                    <!-- Hackathon 3: MIT Energy & Climate Hack — COMSOL Problem Statement -->
+                    <article class="hackathon-card" data-hackathon="pcm" role="tab" aria-selected="false" tabindex="0">
+                        <div class="hackathon-top">
+                            <span class="hackathon-badge"><i class="fas fa-snowflake"></i> MIT Energy &amp; Climate Hack</span>
+                            <span class="hackathon-year">COMSOL Problem Statement</span>
                         </div>
-                        <div class="hackathon-links">
-                            <a href="https://drive.google.com/file/d/1wG5LGMd0ky_kQAOmwnrB6vEO5vgVhtbU/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="hackathon-btn hackathon-btn-primary"><i class="fas fa-play-circle"></i> Watch Presentation / Demo</a>
-                        </div>
+                        <h3>Phase Change Materials for Cold Transportation</h3>
+                        <p class="hackathon-card-lead">Dual-PCM + adaptive wax-motor thermal switch cold-chain container validated in COMSOL 2D multiphysics.</p>
+                        <span class="hackathon-select-cue">Hover or click to explore workflow <i class="fas fa-arrow-right"></i></span>
                     </article>
+                </div>
+
+                <!-- Interactive Split Workbench: Left Description + Right Interactive Flowchart -->
+                <div id="hackathon-stage" class="hackathon-split-stage" role="tabpanel">
+                    <div id="hackathon-detail-left" class="hackathon-detail-pane" aria-live="polite"></div>
+                    <div id="hackathon-flowchart-right" class="hackathon-flowchart-pane">
+                        <div class="flowchart-pane-header">
+                            <span id="flowchart-pane-title" class="flowchart-pane-title"><i class="fas fa-diagram-project"></i> Interactive System Architecture</span>
+                            <span class="flowchart-pane-tip"><i class="fas fa-hand-pointer"></i> Hover or click any stage node</span>
+                        </div>
+                        <div id="hackathon-flowchart-canvas" class="hackathon-flowchart-canvas"></div>
+                        <div id="hackathon-node-inspector" class="hackathon-node-inspector" aria-live="polite"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -327,14 +321,14 @@
         <section id="resume" class="section-padding">
             <div class="container">
                 <h2 class="section-title"><span>Resume &amp; Live LaTeX Studio</span></h2>
-                <p class="section-subtitle-center">Inspect the uploaded PDF directly, or dynamically generate a tailored, Overleaf-ready LaTeX resume for five specialized roles.</p>
+                <p class="section-subtitle-center">View the uploaded PDF directly, or customize a 1-page <strong>Jake's Resume</strong> LaTeX edition tailored for five specialized tracks (Graduation: May 2027).</p>
 
                 <div class="resume-mode-tabs" role="tablist" aria-label="Resume view mode">
                     <button type="button" id="tab-btn-pdf" class="resume-tab-btn active" role="tab" aria-selected="true" data-mode="pdf">
                         <i class="fas fa-file-pdf"></i> Uploaded PDF Resume
                     </button>
                     <button type="button" id="tab-btn-latex" class="resume-tab-btn" role="tab" aria-selected="false" data-mode="latex">
-                        <i class="fas fa-code"></i> Live LaTeX Role Customizer (5 Tracks)
+                        <i class="fas fa-code"></i> Live 1-Page Jake's LaTeX Studio (5 Tracks)
                     </button>
                 </div>
 
@@ -343,21 +337,25 @@
                     <div class="resume-pdf-toolbar">
                         <span class="resume-file-label"><i class="fas fa-file-pdf"></i> <code>resume/Nikhil Komalla Resume.pdf</code></span>
                         <div class="resume-pdf-actions">
-                            <a href="resume/Nikhil%20Komalla%20Resume.pdf" target="_blank" rel="noopener noreferrer" class="resume-action-btn">
+                            <a href="resume/Nikhil%20Komalla%20Resume.pdf?v=20261119" target="_blank" rel="noopener noreferrer" class="resume-action-btn">
                                 <i class="fas fa-external-link-alt"></i> Open PDF
                             </a>
-                            <a href="resume/Nikhil%20Komalla%20Resume.pdf" download="Nikhil_Komalla_Resume.pdf" class="resume-action-btn resume-action-primary">
+                            <a href="resume/Nikhil%20Komalla%20Resume.pdf?v=20261119" download="Nikhil_Komalla_Resume.pdf" class="resume-action-btn resume-action-primary">
                                 <i class="fas fa-download"></i> Download PDF
                             </a>
                         </div>
                     </div>
                     <div class="resume-pdf-wrapper">
-                        <iframe src="resume/Nikhil%20Komalla%20Resume.pdf#view=FitH" title="Nikhil Komalla Resume PDF" class="resume-pdf-frame"></iframe>
+                        <iframe src="resume/Nikhil%20Komalla%20Resume.pdf?v=20261119#view=FitH" title="Nikhil Komalla Resume PDF" class="resume-pdf-frame"></iframe>
                     </div>
                 </div>
 
                 <!-- Mode 2: Live 5-Category LaTeX Customizer -->
                 <div id="resume-panel-latex" class="resume-panel">
+                    <div class="resume-template-banner">
+                        <span class="resume-template-badge"><i class="fas fa-file-alt"></i> 1-Page Jake's Resume LaTeX Template &bull; Graduation: May 2027</span>
+                        <span class="resume-template-note">Tightly curated per track so exported Overleaf <code>.tex</code> compiles cleanly onto <strong>1 US Letter page</strong>.</span>
+                    </div>
                     <div class="resume-category-bar" role="group" aria-label="Tailor resume by role track">
                         <button type="button" class="resume-cat-btn active" data-category="catalysis">Computational Catalysis</button>
                         <button type="button" class="resume-cat-btn" data-category="materials">Computational Materials</button>
@@ -421,7 +419,7 @@
         <section id="contact" class="section-padding contact-section">
             <div class="container">
                 <h2 class="section-title"><span>Let's Connect</span></h2>
-                <p class="contact-subtitle">Graduating <strong>Summer 2027</strong> and open to full-time roles, research collaborations, and technical discussions across <strong>Computational Catalysis</strong>, <strong>Materials Modeling</strong>, <strong>Electrochemistry</strong>, and <strong>AI for Science (MLIPs)</strong>.</p>
+                <p class="contact-subtitle">Graduating <strong>May 2027</strong> and open to full-time roles, research collaborations, and technical discussions across <strong>Computational Catalysis</strong>, <strong>Materials Modeling</strong>, <strong>Electrochemistry</strong>, and <strong>AI for Science (MLIPs)</strong>.</p>
                 <div class="contact-details">
                     <p><i class="fas fa-envelope"></i> <a href="mailto:nxk5431@psu.edu">nxk5431@psu.edu</a></p>
                     <p><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/nikhil-komalla/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
