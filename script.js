@@ -164,8 +164,8 @@ const HACKATHONS_DATA = {
             "HRMC + XRD R-Factor Closed Loop"
         ],
         team: [
-            { name: "Anirban Phukan", url: "https://www.linkedin.com/in/anirban-phukan277" },
-            { name: "Nishant Mishra", url: "https://www.linkedin.com/in/%E0%A4%A8%E0%A4%BF%E0%A4%B6%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4-%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A4%BE" },
+            { name: "Anirban Phukan" },
+            { name: "Nishant Mishra" },
             { name: "Nikhil Komalla", url: "https://www.linkedin.com/in/nikhil-komalla" }
         ],
         tags: ["FastAPI", "Three.js", "Materials Project", "pymatgen", "HRMC", "Groq LLM"],
@@ -283,9 +283,9 @@ const HACKATHONS_DATA = {
             "Strictly Grounded Ollama Recommender"
         ],
         team: [
-            { name: "Dara Akdag", url: "https://scientificintelligence.org/campaigns/osi-hackathon-2026/submissions/147" },
             { name: "Nikhil Komalla", url: "https://www.linkedin.com/in/nikhil-komalla" },
-            { name: "Nishant Mishra", url: "https://www.linkedin.com/in/%E0%A4%A8%E0%A4%BF%E0%A4%B6%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4-%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A4%BE" }
+            { name: "Dara Akdag" },
+            { name: "Nishant Mishra" }
         ],
         tags: ["MLIP Checkpoints", "Bayesian UQ", "MACE / NequIP", "Scientific Honesty", "Recommender"],
         links: [
@@ -414,7 +414,7 @@ const HACKATHONS_DATA = {
         yearTag: "COMSOL Problem Statement #1 \u2022 Team PCM's Got Latent",
         title: "Phase Change Materials for Cold Transportation",
         subtitle: "COMSOL Problem Statement: Dual-PCM & Adaptive Thermal Switch Architecture for Clean Cold-Chain Freight",
-        description: "Addressing COMSOL's MIT Energy & Climate Hack Problem Statement (#1: Can phase change materials reduce total cost vs. traditional insulation?), our interdisciplinary team engineered a passive Dual-PCM + Adaptive Thermal Switch container. Validated with COMSOL 2D Heat Transfer with Phase Change (Apparent Heat Capacity method), the design achieves 111.2 hours of passive 2\u20134 \u00b0C thermal holdover with zero freeze risk while cutting 5-year total cost by 50% compared to active diesel reefers.",
+        description: "Addressing the COMSOL MIT Energy & Climate Hack problem statement: \"Are there scenarios where phase change materials can be used to reduce total cost compared with traditional insulation alone?\" Our team engineered a passive Dual-PCM + Adaptive Thermal Switch container. Validated with COMSOL 2D Heat Transfer with Phase Change (Apparent Heat Capacity method), the design achieves 111.2 hours of passive 2\u20134 \u00b0C thermal holdover with zero freeze risk while cutting 5-year total cost by 50% compared to active diesel reefers.",
         highlights: [
             "COMSOL 2D Free Triangular Mesh",
             "111.2 h Passive 2\u20134 \u00b0C Holdover",
@@ -422,10 +422,10 @@ const HACKATHONS_DATA = {
             "-50% 5-Yr TCO & 1.6-Yr Reefer Payback"
         ],
         team: [
-            { name: "Shriram Ravikumar (Tufts Univ.)", url: "https://drive.google.com/file/d/1wG5LGMd0ky_kQAOmwnrB6vEO5vgVhtbU/view?usp=drive_link" },
-            { name: "Muhammad Ali (Univ. of Houston)", url: "https://drive.google.com/file/d/1wG5LGMd0ky_kQAOmwnrB6vEO5vgVhtbU/view?usp=drive_link" },
-            { name: "Nikhil Komalla (Penn State)", url: "https://www.linkedin.com/in/nikhil-komalla" },
-            { name: "Nishant Mishra (Penn State)", url: "https://www.linkedin.com/in/%E0%A4%A8%E0%A4%BF%E0%A4%B6%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4-%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A4%BE" }
+            { name: "Nikhil Komalla", url: "https://www.linkedin.com/in/nikhil-komalla" },
+            { name: "Shriram Ravikumar" },
+            { name: "Muhammad Ali" },
+            { name: "Nishant Mishra" }
         ],
         tags: ["MIT Energy & Climate Hack", "COMSOL Multiphysics", "Dual-PCM", "Thermal Switches", "LCCA / TCO"],
         links: [
@@ -444,7 +444,7 @@ const HACKATHONS_DATA = {
                     role: "input",
                     title: "MIT Hack Prompt",
                     sub: "COMSOL Problem #1",
-                    detail: "Can phase change materials (PCMs) reduce lifecycle total cost of ownership vs. foam + wet ice and diesel reefers in 2-4 C cold transport?"
+                    detail: "Are there scenarios where phase change materials can be used to reduce total cost compared with traditional insulation alone?"
                 },
                 {
                     id: "dual_pcm",
@@ -1684,7 +1684,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 .join("");
 
             const teamHtml = (hack.team || [])
-                .map(m => `<a href="${escapeHtml(m.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(m.name)}</a>`)
+                .map(m => m.url
+                    ? `<a href="${escapeHtml(m.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(m.name)}</a>`
+                    : escapeHtml(m.name))
                 .join(", ");
 
             const tagsHtml = (hack.tags || []).map(t => `<span>${escapeHtml(t)}</span>`).join("");
