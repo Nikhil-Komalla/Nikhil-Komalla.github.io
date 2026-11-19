@@ -928,7 +928,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const yearSpan = document.getElementById("current-year");
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // --- Hero 3Blue1Brown-Style 3D Wavefunction, Saddle Point & Troughs Canvas ---
+    // --- Hero IMEC-Inspired Interactive 3D Wavefunction PDE + Dropping Glass Bloch Sphere & Rising Bump ---
     function initHeroLatticeCanvas() {
         const heroEl = document.getElementById("hero");
         const canvas = document.getElementById("hero-lattice-canvas");
@@ -940,29 +940,56 @@ document.addEventListener("DOMContentLoaded", function () {
         let height = 0;
         let heroVisible = true;
         let rafId = null;
+        let lastTimeMs = 0;
 
-        const NX = 44;
-        const NY = 26;
-        const U_MIN = -2.8;
-        const U_MAX = 2.8;
-        const V_MIN = -1.75;
-        const V_MAX = 1.75;
+        const NX = 52;
+        const NY = 30;
+        const STRIDE = NX + 1;
+        const TOTAL_NODES = STRIDE * (NY + 1);
+        const U_MIN = -3.2;
+        const U_MAX = 3.2;
+        const V_MIN = -1.85;
+        const V_MAX = 1.85;
+        const DU = (U_MAX - U_MIN) / NX;
+        const DV = (V_MAX - V_MIN) / NY;
+
+        // Preallocated 2D wave PDE buffers
+        let hPrev = new Float32Array(TOTAL_NODES);
+        let hCurr = new Float32Array(TOTAL_NODES);
+        let hNext = new Float32Array(TOTAL_NODES);
+
+        // Preallocated projected vertex grid
+        const grid = Array.from({ length: NY + 1 }, () =>
+            Array.from({ length: NX + 1 }, () => ({ sx: 0, sy: 0, z: 0, u: 0, v: 0, alphaMask: 1, depth: 1 }))
+        );
 
         let targetCamX = 0;
         let targetCamY = 0;
         let camX = 0;
         let camY = 0;
-        let pointerActive = false;
-        let targetU = 0;
-        let targetV = 0;
-        let pointerU = 0;
-        let pointerV = 0;
-        let pointerStrength = 0;
+        let hoverZone = "center";
 
-        // Preallocated projected vertex grid for zero-GC 60 FPS animation
-        const grid = Array.from({ length: NY + 1 }, () =>
-            Array.from({ length: NX + 1 }, () => ({ sx: 0, sy: 0, z: 0, alphaMask: 1 }))
-        );
+        const ball = {
+            state: reduceMotion ? "landed" : "idle",
+            u: -1.95,
+            v: 0.08,
+            targetU: -1.95,
+            targetV: 0.08,
+            z: reduceMotion ? -0.82 : 2.8,
+            vz: 0,
+            radius3D: 0.56,
+            wellDepth: reduceMotion ? 1.0 : 0,
+            opacity: reduceMotion ? 1.0 : 0
+        };
+
+        const bump = {
+            u: 1.95,
+            v: -0.06,
+            targetU: 1.95,
+            targetV: -0.06,
+            strength: reduceMotion ? 0.78 : 0.18,
+            targetStrength: reduceMotion ? 0.78 : 0.18
+        };
 
         function resizeCanvas() {
             const rect = heroEl.getBoundingClientRect();
@@ -974,21 +1001,78 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        function evalSurface(u, v, t) {
-            const trough1 = -1.25 * Math.exp(-(((u + 1.45) * (u + 1.45)) / 0.72 + ((v - 0.28) * (v - 0.28)) / 0.62));
-            const trough2 = -1.15 * Math.exp(-(((u - 1.45) * (u - 1.45)) / 0.72 + ((v + 0.28) * (v + 0.28)) / 0.62));
-            const ridge1 = 1.05 * Math.exp(-(((u - 0.08) * (u - 0.08)) / 0.95 + ((v - 1.12) * (v - 1.12)) / 0.42));
-            const ridge2 = 1.05 * Math.exp(-(((u + 0.08) * (u + 0.08)) / 0.95 + ((v + 1.12) * (v + 1.12)) / 0.42));
-            const saddleBridge = 0.26 * Math.exp(-((u * u) / 0.55 + (v * v) / 0.90));
-            const psi = 0.14 * Math.cos(2.3 * u - 1.1 * v - t * 1.1) * Math.exp(-(u * u * 0.14 + v * v * 0.22));
-            let hoverWave = 0;
-            if (pointerStrength > 0.01) {
-                const du = u - pointerU;
-                const dv = v - pointerV;
-                const dM = Math.hypot(du, dv);
-                hoverWave = pointerStrength * 0.42 * Math.cos(3.4 * dM - t * 4.0) * Math.exp(-(dM * dM) / 0.55);
+        function injectWaveRipple(u0, v0, amplitude, radius) {
+            const r2 = radius * radius;
+            for (let j = 1; j < NY; j++) {
+                const v = V_MIN + j * DV;
+                const dv = v - v0;
+                if (dv * dv > r2 * 4.5) continue;
+                for (let i = 1; i < NX; i++) {
+                    const u = U_MIN + i * DU;
+                    const du = u - u0;
+                    const d2 = du * du + dv * dv;
+                    if (d2 > r2 * 4.5) continue;
+                    const idx = j * STRIDE + i;
+                    const nextVal = hCurr[idx] + amplitude * Math.exp(-d2 / r2);
+                    hCurr[idx] = Math.max(-1.4, Math.min(1.4, nextVal));
+                }
             }
-            return trough1 + trough2 + ridge1 + ridge2 + saddleBridge + psi + hoverWave;
+        }
+
+        function stepWavePDE() {
+            for (let j = 1; j < NY; j++) {
+                const row = j * STRIDE;
+                for (let i = 1; i < NX; i++) {
+                    const idx = row + i;
+                    const lap = hCurr[idx - 1] + hCurr[idx + 1] + hCurr[idx - STRIDE] + hCurr[idx + STRIDE] - 4 * hCurr[idx];
+                    const vel = (hCurr[idx] - hPrev[idx]) * 0.972;
+                    let val = hCurr[idx] + vel + 0.16 * lap - 0.015 * hCurr[idx];
+                    if (val > 1.5) val = 1.5;
+                    else if (val < -1.5) val = -1.5;
+                    hNext[idx] = val;
+                }
+            }
+            // Fixed Dirichlet boundary = 0
+            for (let i = 0; i <= NX; i++) {
+                hNext[i] = 0;
+                hNext[NY * STRIDE + i] = 0;
+            }
+            for (let j = 0; j <= NY; j++) {
+                hNext[j * STRIDE] = 0;
+                hNext[j * STRIDE + NX] = 0;
+            }
+            const tmp = hPrev;
+            hPrev = hCurr;
+            hCurr = hNext;
+            hNext = tmp;
+        }
+
+        function evalStaticFeatures(u, v, t) {
+            const ambientWave = 0.06 * Math.cos(1.8 * u - 0.9 * v - t * 1.0) * Math.exp(-(u * u * 0.08 + v * v * 0.14));
+            const dbU = u - ball.u;
+            const dbV = v - ball.v;
+            const leftWell = -1.45 * ball.wellDepth * Math.exp(-((dbU * dbU + dbV * dbV) / 0.56));
+            const drU = u - bump.u;
+            const drV = v - bump.v;
+            const rightBump = 1.22 * bump.strength * Math.exp(-((drU * drU + drV * drV) / 0.64));
+            return ambientWave + leftWell + rightBump;
+        }
+
+        function samplePdeHeight(u, v) {
+            const fi = Math.max(0, Math.min(NX - 0.001, (u - U_MIN) / DU));
+            const fj = Math.max(0, Math.min(NY - 0.001, (v - V_MIN) / DV));
+            const i0 = Math.floor(fi);
+            const j0 = Math.floor(fj);
+            const tx = fi - i0;
+            const ty = fj - j0;
+            const idx00 = j0 * STRIDE + i0;
+            const a = hCurr[idx00] * (1 - tx) + hCurr[idx00 + 1] * tx;
+            const b = hCurr[idx00 + STRIDE] * (1 - tx) + hCurr[idx00 + STRIDE + 1] * tx;
+            return a * (1 - ty) + b * ty;
+        }
+
+        function evalTotalZ(u, v, t) {
+            return evalStaticFeatures(u, v, t) + samplePdeHeight(u, v);
         }
 
         function projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch) {
@@ -996,72 +1080,342 @@ document.addEventListener("DOMContentLoaded", function () {
             const y1 = u * sinYaw + v * cosYaw;
             const y2 = y1 * cosPitch - z * sinPitch;
             const z2 = y1 * sinPitch + z * cosPitch;
-            const fov = 6.2;
-            const persp = fov / (fov + y2 + 5.2);
-            const scale = Math.min(width * 0.24, height * 0.44) * persp;
-            const sx = width * 0.5 + x1 * scale * 1.25;
-            const sy = height * 0.56 - z2 * scale * 0.92;
-            const cdx = (sx - width * 0.5) / (width * 0.34);
-            const cdy = (sy - height * 0.48) / (height * 0.32);
+            const fov = 6.8;
+            const persp = fov / (fov + y2 + 5.6);
+            const scale = Math.min(width * 0.25, height * 0.45) * persp;
+            const sx = width * 0.5 + x1 * scale * 1.18;
+            const sy = height * 0.62 - z2 * scale * 0.92;
+
+            // Keep center hero copy clear while maximizing flank/depth legibility
+            const cdx = (sx - width * 0.5) / (width * 0.30);
+            const cdy = (sy - height * 0.44) / (height * 0.28);
             const cDist = Math.hypot(cdx, cdy);
-            const tMask = Math.min(1, Math.max(0, (cDist - 0.35) / 0.85));
-            const alphaMask = 0.26 + 0.64 * (tMask * tMask * (3 - 2 * tMask));
-            return { sx, sy, alphaMask };
+            const tCenter = Math.min(1, Math.max(0, (cDist - 0.32) / 0.88));
+            const centerFade = 0.28 + 0.72 * (tCenter * tCenter * (3 - 2 * tCenter));
+
+            const edgeU = Math.max(0, 1 - Math.pow(Math.abs(u) / 3.45, 3.2));
+            const edgeV = Math.max(0, 1 - Math.pow(Math.abs(v) / 2.02, 3.0));
+            const dofFade = edgeU * edgeV * Math.min(1, Math.max(0.25, persp * 1.45));
+
+            return { sx, sy, scale, persp, alphaMask: centerFade * dofFade };
         }
 
-        function manimColor(z, u, v, alpha) {
-            const saddleProx = Math.exp(-((u * u) / 0.38 + (v * v) / 0.38));
+        function sheetColor(z, alpha) {
             let r, g, b;
-            if (z < -0.25) {
-                // Deep troughs: Manim cyan-teal (#22d3ee -> #38bdf8)
-                const k = Math.min(1, Math.max(0, (-0.25 - z) / 0.95));
-                r = 56 - 22 * k;
-                g = 189 + 22 * k;
-                b = 248 - 10 * k;
-            } else if (z <= 0.30) {
-                // Mid / saddle transition zone: ice-blue warming toward gold near saddle
-                const k = (z + 0.25) / 0.55;
-                r = 96 + 33 * k;
-                g = 165 - 25 * k;
-                b = 250 - 2 * k;
+            if (z < -0.15) {
+                // Warped cyan-teal gravity well glow
+                const k = Math.min(1, (-0.15 - z) / 1.15);
+                r = 56 - 11 * k;
+                g = 189 + 46 * k;
+                b = 248 + 7 * k;
+            } else if (z <= 0.18) {
+                const k = (z + 0.15) / 0.33;
+                r = 45 + 11 * k;
+                g = 212 - 23 * k;
+                b = 232 + 16 * k;
             } else {
-                // High energy ridges: indigo-violet (#818cf8 -> #c084fc)
-                const k = Math.min(1, (z - 0.30) / 0.85);
-                r = 129 + 63 * k;
-                g = 140 - 8 * k;
-                b = 248 + 4 * k;
+                // Rising bump crest: electric cyan -> luminous gold-amber -> violet glint
+                const k = Math.min(1, (z - 0.18) / 0.95);
+                r = 56 + 195 * k;
+                g = 189 + 6 * k;
+                b = 248 - 196 * k;
             }
-            if (saddleProx > 0.15) {
-                const s = saddleProx * 0.55;
-                r = r + (251 - r) * s;
-                g = g + (191 - g) * s;
-                b = b + (36 - b) * s;
+            return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${Math.min(0.95, Math.max(0, alpha)).toFixed(3)})`;
+        }
+
+        function updatePhysics(dt, t) {
+            const easeCam = reduceMotion ? 1 : 0.08;
+            camX += (targetCamX - camX) * easeCam;
+            camY += (targetCamY - camY) * easeCam;
+
+            bump.u += (bump.targetU - bump.u) * 0.11;
+            bump.v += (bump.targetV - bump.v) * 0.11;
+            bump.strength += (bump.targetStrength - bump.strength) * 0.09;
+
+            if (ball.state === "dropping") {
+                ball.u += (ball.targetU - ball.u) * 0.08;
+                ball.v += (ball.targetV - ball.v) * 0.08;
+                ball.opacity = Math.min(1, ball.opacity + dt * 5.2);
+                ball.vz -= 9.5 * dt;
+                ball.z += ball.vz * dt;
+
+                const meshZ = evalTotalZ(ball.u, ball.v, t);
+                const restingCenterZ = meshZ + ball.radius3D * 0.62;
+                if (ball.z <= restingCenterZ) {
+                    const impactSpeed = Math.abs(ball.vz);
+                    ball.z = restingCenterZ;
+                    if (impactSpeed > 0.65) {
+                        injectWaveRipple(ball.u, ball.v, -Math.min(0.65, 0.24 + impactSpeed * 0.085), 0.44);
+                        injectWaveRipple(bump.u, bump.v, 0.18, 0.42);
+                        bump.targetStrength = Math.max(bump.targetStrength, 0.88);
+                        ball.vz = impactSpeed * 0.40;
+                    } else {
+                        ball.vz = 0;
+                        ball.state = "landed";
+                    }
+                }
+                ball.wellDepth += (1.0 - ball.wellDepth) * Math.min(1, dt * 8.0);
+            } else if (ball.state === "landed") {
+                const prevU = ball.u;
+                const prevV = ball.v;
+                ball.u += (ball.targetU - ball.u) * 0.12;
+                ball.v += (ball.targetV - ball.v) * 0.12;
+                if (hoverZone === "left" && Math.hypot(ball.u - prevU, ball.v - prevV) > 0.025) {
+                    injectWaveRipple(ball.u, ball.v, -0.055, 0.34);
+                }
+                ball.wellDepth += (1.0 - ball.wellDepth) * 0.12;
+                ball.opacity += (1.0 - ball.opacity) * 0.12;
+                ball.z = evalTotalZ(ball.u, ball.v, t) + ball.radius3D * 0.54;
+            } else if (ball.state === "lifting") {
+                ball.wellDepth += (0.06 - ball.wellDepth) * 0.08;
+                ball.opacity += (0.0 - ball.opacity) * 0.065;
+                ball.z += 1.45 * dt;
+                if (ball.opacity < 0.02) {
+                    ball.opacity = 0;
+                    ball.state = "idle";
+                }
             }
-            return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
+
+            if (hoverZone === "right" && Math.hypot(bump.targetU - bump.u, bump.targetV - bump.v) > 0.035) {
+                injectWaveRipple(bump.u, bump.v, 0.055, 0.36);
+            }
+        }
+
+        function drawBlochSphere(t, cosYaw, sinYaw, cosPitch, sinPitch) {
+            if (ball.opacity <= 0.02) return;
+            const proj = projectPoint(ball.u, ball.v, ball.z, cosYaw, sinYaw, cosPitch, sinPitch);
+            const cx = proj.sx;
+            const cy = proj.sy;
+            const rPx = Math.max(22, ball.radius3D * proj.scale);
+
+            ctx.save();
+            ctx.globalAlpha = ball.opacity;
+
+            // Pass 1: Caustic golden-cyan reflection pool inside depressed trough underneath sphere
+            ctx.save();
+            ctx.globalCompositeOperation = "lighter";
+            const floorProj = projectPoint(ball.u, ball.v, evalTotalZ(ball.u, ball.v, t) + 0.03, cosYaw, sinYaw, cosPitch, sinPitch);
+            const caustic = ctx.createRadialGradient(floorProj.sx, floorProj.sy, 2, floorProj.sx, floorProj.sy, rPx * 1.45);
+            caustic.addColorStop(0, "rgba(251, 191, 36, 0.34)");
+            caustic.addColorStop(0.45, "rgba(45, 212, 191, 0.24)");
+            caustic.addColorStop(1, "rgba(34, 211, 238, 0)");
+            ctx.fillStyle = caustic;
+            ctx.beginPath();
+            ctx.ellipse(floorProj.sx, floorProj.sy, rPx * 1.45, rPx * 0.72, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Helper to render 3D rotating golden geodesic rings split into back (z<0) and front (z>=0)
+            function drawGeodesicRings(frontPass) {
+                const rings = [
+                    { rx: 1.0, ry: 0.0, rz: t * 0.42 },
+                    { rx: 0.42, ry: Math.PI * 0.5, rz: t * 0.31 },
+                    { rx: 1.18, ry: Math.PI * 0.28, rz: -t * 0.24 }
+                ];
+                const SEG = 54;
+                rings.forEach(cfg => {
+                    const cRx = Math.cos(cfg.rx), sRx = Math.sin(cfg.rx);
+                    const cRy = Math.cos(cfg.ry), sRy = Math.sin(cfg.ry);
+                    const cRz = Math.cos(cfg.rz), sRz = Math.sin(cfg.rz);
+                    ctx.beginPath();
+                    let penDown = false;
+                    for (let k = 0; k <= SEG; k++) {
+                        const a = (k / SEG) * Math.PI * 2;
+                        let px = Math.cos(a);
+                        let py = Math.sin(a);
+                        let pz = 0;
+
+                        // Rotate around Z
+                        let tx = px * cRz - py * sRz;
+                        let ty = px * sRz + py * cRz;
+                        px = tx; py = ty;
+                        // Rotate around X
+                        ty = py * cRx - pz * sRx;
+                        let tz = py * sRx + pz * cRx;
+                        py = ty; pz = tz;
+                        // Rotate around Y
+                        tx = px * cRy + pz * sRy;
+                        tz = -px * sRy + pz * cRy;
+                        px = tx; pz = tz;
+
+                        const isFront = pz >= 0;
+                        if (isFront !== frontPass) {
+                            penDown = false;
+                            continue;
+                        }
+                        const sx = cx + px * rPx;
+                        const sy = cy - py * rPx;
+                        if (!penDown) {
+                            ctx.moveTo(sx, sy);
+                            penDown = true;
+                        } else {
+                            ctx.lineTo(sx, sy);
+                        }
+                    }
+                    ctx.strokeStyle = frontPass ? "rgba(253, 224, 128, 0.88)" : "rgba(217, 119, 6, 0.28)";
+                    ctx.lineWidth = frontPass ? 1.75 : 1.05;
+                    ctx.stroke();
+                });
+            }
+
+            // Pass 2: Back-half golden geodesic meridians
+            drawGeodesicRings(false);
+
+            // Pass 3: Translucent smoked-glass shell
+            const glassGrad = ctx.createRadialGradient(
+                cx + rPx * 0.28, cy - rPx * 0.30, rPx * 0.08,
+                cx, cy, rPx
+            );
+            glassGrad.addColorStop(0, "rgba(18, 36, 62, 0.30)");
+            glassGrad.addColorStop(0.58, "rgba(8, 16, 34, 0.56)");
+            glassGrad.addColorStop(0.88, "rgba(28, 22, 18, 0.72)");
+            glassGrad.addColorStop(1, "rgba(186, 230, 253, 0.44)");
+            ctx.fillStyle = glassGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pass 4: Glowing golden core atom + precessing 3D spin arrow |psi>
+            ctx.save();
+            ctx.globalCompositeOperation = "lighter";
+            const coreGlow = ctx.createRadialGradient(cx, cy, 1, cx, cy, rPx * 0.48);
+            coreGlow.addColorStop(0, "rgba(255, 252, 230, 1)");
+            coreGlow.addColorStop(0.24, "rgba(251, 191, 36, 0.92)");
+            coreGlow.addColorStop(0.55, "rgba(245, 158, 11, 0.34)");
+            coreGlow.addColorStop(1, "rgba(245, 158, 11, 0)");
+            ctx.fillStyle = coreGlow;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx * 0.48, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Spin vector shaft & conical arrowhead
+            const phiSpin = 0.55 + Math.sin(t * 0.8) * 0.25;
+            const thetaSpin = 0.78 + Math.cos(t * 0.65) * 0.14;
+            const sxDir = Math.sin(thetaSpin) * Math.cos(phiSpin);
+            const syDir = Math.cos(thetaSpin);
+            const tipX = cx - sxDir * rPx * 0.78;
+            const tipY = cy - syDir * rPx * 0.64;
+            const tailX = cx + sxDir * rPx * 0.68;
+            const tailY = cy + syDir * rPx * 0.54;
+
+            ctx.strokeStyle = "rgba(253, 224, 128, 0.92)";
+            ctx.lineWidth = 2.0;
+            ctx.beginPath();
+            ctx.moveTo(tailX, tailY);
+            ctx.lineTo(tipX, tipY);
+            ctx.stroke();
+
+            const ang = Math.atan2(tipY - tailY, tipX - tailX);
+            const headLen = Math.max(7, rPx * 0.16);
+            ctx.fillStyle = "#fef08a";
+            ctx.beginPath();
+            ctx.moveTo(tipX, tipY);
+            ctx.lineTo(tipX - headLen * Math.cos(ang - 0.38), tipY - headLen * Math.sin(ang - 0.38));
+            ctx.lineTo(tipX - headLen * Math.cos(ang + 0.38), tipY - headLen * Math.sin(ang + 0.38));
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            // Pass 5: Front-half golden geodesic rings
+            drawGeodesicRings(true);
+
+            // Pass 6: Fresnel outer rim & upper-right glass specular crescent
+            ctx.strokeStyle = "rgba(186, 230, 253, 0.58)";
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+            ctx.lineWidth = 2.4;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPx - 2.5, -Math.PI * 0.42, -Math.PI * 0.08);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawRightBumpEffects(t, cosYaw, sinYaw, cosPitch, sinPitch) {
+            if (bump.strength <= 0.22) return;
+            const intensity = Math.min(1, (bump.strength - 0.22) / 0.95);
+            const apexZ = evalTotalZ(bump.u, bump.v, t) + 0.05;
+            const apexProj = projectPoint(bump.u, bump.v, apexZ, cosYaw, sinYaw, cosPitch, sinPitch);
+
+            // 1. Additive apex quantum bloom
+            ctx.save();
+            ctx.globalCompositeOperation = "lighter";
+            const rad = 26 + 22 * intensity;
+            const bloom = ctx.createRadialGradient(apexProj.sx, apexProj.sy, 2, apexProj.sx, apexProj.sy, rad);
+            bloom.addColorStop(0, `rgba(253, 224, 128, ${(0.52 * intensity).toFixed(3)})`);
+            bloom.addColorStop(0.5, `rgba(56, 189, 248, ${(0.28 * intensity).toFixed(3)})`);
+            bloom.addColorStop(1, "rgba(56, 189, 248, 0)");
+            ctx.fillStyle = bloom;
+            ctx.beginPath();
+            ctx.arc(apexProj.sx, apexProj.sy, rad, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // 2. Three concentric 3D iso-elevation contour rings projected onto the bump dome
+            const ringRadii = [0.28, 0.56, 0.88];
+            const STEPS = 36;
+            ringRadii.forEach((rr, idx) => {
+                ctx.beginPath();
+                for (let k = 0; k <= STEPS; k++) {
+                    const ang = (k / STEPS) * Math.PI * 2;
+                    const u = bump.u + Math.cos(ang) * rr;
+                    const v = bump.v + Math.sin(ang) * rr;
+                    const z = evalTotalZ(u, v, t) + 0.025;
+                    const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
+                    if (k === 0) ctx.moveTo(p.sx, p.sy);
+                    else ctx.lineTo(p.sx, p.sy);
+                }
+                const ringAlpha = intensity * (0.68 - idx * 0.16);
+                ctx.strokeStyle = idx === 0
+                    ? `rgba(251, 191, 36, ${ringAlpha.toFixed(3)})`
+                    : `rgba(103, 232, 249, ${ringAlpha.toFixed(3)})`;
+                ctx.lineWidth = idx === 0 ? 1.7 : 1.15;
+                ctx.stroke();
+            });
+
+            // 3. Gentle rising quantum crest sparks above apex
+            if (!reduceMotion) {
+                for (let s = 0; s < 5; s++) {
+                    const phase = (t * 0.55 + s * 0.2) % 1;
+                    const su = bump.u + Math.sin(s * 2.1 + t) * 0.26 * (1 - phase);
+                    const sv = bump.v + Math.cos(s * 1.7 + t) * 0.22 * (1 - phase);
+                    const sz = apexZ + phase * 0.58;
+                    const sp = projectPoint(su, sv, sz, cosYaw, sinYaw, cosPitch, sinPitch);
+                    ctx.fillStyle = `rgba(253, 224, 128, ${((1 - phase) * intensity * 0.8).toFixed(3)})`;
+                    ctx.beginPath();
+                    ctx.arc(sp.sx, sp.sy, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
         }
 
         function drawFrame(nowMs) {
             const t = nowMs * 0.001;
-            const easeCam = reduceMotion ? 1 : 0.08;
-            const easePtr = reduceMotion ? 1 : 0.10;
-            camX += (targetCamX - camX) * easeCam;
-            camY += (targetCamY - camY) * easeCam;
-            pointerU += (targetU - pointerU) * easePtr;
-            pointerV += (targetV - pointerV) * easePtr;
-            pointerStrength += ((pointerActive ? 1 : 0) - pointerStrength) * easePtr;
+            const dt = lastTimeMs > 0 ? Math.min(0.033, Math.max(0.001, (nowMs - lastTimeMs) * 0.001)) : 0.016;
+            lastTimeMs = nowMs;
 
-            const yaw = -0.32 + camX * 0.11;
-            const pitch = 0.66 + camY * 0.07;
+            if (!reduceMotion) {
+                stepWavePDE();
+                updatePhysics(dt, t);
+            }
+
+            const yaw = -0.10 + camX * 0.07;
+            const pitch = 0.48 + camY * 0.05;
             const cosYaw = Math.cos(yaw);
             const sinYaw = Math.sin(yaw);
             const cosPitch = Math.cos(pitch);
             const sinPitch = Math.sin(pitch);
 
             for (let j = 0; j <= NY; j++) {
-                const v = V_MIN + (j / NY) * (V_MAX - V_MIN);
+                const v = V_MIN + j * DV;
+                const row = j * STRIDE;
                 for (let i = 0; i <= NX; i++) {
-                    const u = U_MIN + (i / NX) * (U_MAX - U_MIN);
-                    const z = evalSurface(u, v, t);
+                    const u = U_MIN + i * DU;
+                    const z = evalStaticFeatures(u, v, t) + hCurr[row + i];
                     const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
                     const cell = grid[j][i];
                     cell.sx = p.sx;
@@ -1075,32 +1429,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Wireframe mesh lines (connecting along u and v grid directions)
+            // 1. Curved glowing wavefunction grid lines along u and v directions
             ctx.lineWidth = 1.05;
             for (let j = 0; j <= NY; j++) {
                 for (let i = 0; i < NX; i++) {
                     const a = grid[j][i];
                     const b = grid[j][i + 1];
                     const zm = 0.5 * (a.z + b.z);
-                    const um = 0.5 * (a.u + b.u);
-                    const vm = 0.5 * (a.v + b.v);
-                    const alpha = Math.min(0.62, 0.5 * (a.alphaMask + b.alphaMask) * 0.58);
-                    ctx.strokeStyle = manimColor(zm, um, vm, alpha);
+                    const baseAlpha = 0.5 * (a.alphaMask + b.alphaMask) * (0.44 + Math.min(0.42, Math.abs(zm) * 0.42));
+                    if (baseAlpha < 0.03) continue;
+                    ctx.strokeStyle = sheetColor(zm, baseAlpha);
                     ctx.beginPath();
                     ctx.moveTo(a.sx, a.sy);
                     ctx.lineTo(b.sx, b.sy);
                     ctx.stroke();
                 }
             }
-            for (let i = 0; i <= NX; i += 2) {
+            for (let i = 0; i <= NX; i++) {
                 for (let j = 0; j < NY; j++) {
                     const a = grid[j][i];
                     const b = grid[j + 1][i];
                     const zm = 0.5 * (a.z + b.z);
-                    const um = 0.5 * (a.u + b.u);
-                    const vm = 0.5 * (a.v + b.v);
-                    const alpha = Math.min(0.46, 0.5 * (a.alphaMask + b.alphaMask) * 0.44);
-                    ctx.strokeStyle = manimColor(zm, um, vm, alpha);
+                    const baseAlpha = 0.5 * (a.alphaMask + b.alphaMask) * (0.36 + Math.min(0.42, Math.abs(zm) * 0.40));
+                    if (baseAlpha < 0.03) continue;
+                    ctx.strokeStyle = sheetColor(zm, baseAlpha);
                     ctx.beginPath();
                     ctx.moveTo(a.sx, a.sy);
                     ctx.lineTo(b.sx, b.sy);
@@ -1108,72 +1460,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // 2. Nodal connecting dots at grid vertices
+            // 2. Tiny glowing connecting dots at mesh vertices
             for (let j = 0; j <= NY; j++) {
                 for (let i = 0; i <= NX; i++) {
-                    if ((i + j) % 2 !== 0 && i !== 0 && i !== NX) continue;
                     const a = grid[j][i];
-                    const alpha = a.alphaMask * 0.72;
-                    const r = 1.35 + Math.min(0.85, Math.abs(a.z) * 0.65);
-                    ctx.fillStyle = manimColor(a.z, a.u, a.v, alpha);
+                    const dotAlpha = a.alphaMask * (0.50 + Math.min(0.45, Math.abs(a.z) * 0.45));
+                    if (dotAlpha < 0.06) continue;
+                    const rad = 1.15 + Math.min(0.95, Math.abs(a.z) * 0.58);
+                    ctx.fillStyle = sheetColor(a.z, dotAlpha);
                     ctx.beginPath();
-                    ctx.arc(a.sx, a.sy, r, 0, Math.PI * 2);
+                    ctx.arc(a.sx, a.sy, rad, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
 
-            // 3. Minimum Energy Path (MEP) connecting Left Trough -> Saddle Point -> Right Trough
-            const MEP_STEPS = 48;
-            ctx.save();
-            ctx.lineWidth = 2.3;
-            ctx.strokeStyle = "rgba(251, 191, 36, 0.68)";
-            ctx.beginPath();
-            for (let s = 0; s <= MEP_STEPS; s++) {
-                const u = -1.45 + (s / MEP_STEPS) * 2.90;
-                const v = -0.28 * Math.sin((u / 1.45) * (Math.PI / 2));
-                const z = evalSurface(u, v, t) + 0.045;
-                const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
-                if (s === 0) ctx.moveTo(p.sx, p.sy);
-                else ctx.lineTo(p.sx, p.sy);
-            }
-            ctx.stroke();
-            ctx.restore();
-
-            // 4. Trough halos (cyan) + Saddle Point halo (gold) + animated wavepacket beads
-            const landmarks = [
-                { u: -1.45, v: 0.28, color: "34, 211, 238", rad: 16 },
-                { u: 0.0, v: 0.0, color: "251, 191, 36", rad: 18 },
-                { u: 1.45, v: -0.28, color: "34, 211, 238", rad: 16 }
-            ];
-            landmarks.forEach(lm => {
-                const z = evalSurface(lm.u, lm.v, t) + 0.045;
-                const p = projectPoint(lm.u, lm.v, z, cosYaw, sinYaw, cosPitch, sinPitch);
-                const g = ctx.createRadialGradient(p.sx, p.sy, 1, p.sx, p.sy, lm.rad);
-                g.addColorStop(0, `rgba(${lm.color}, 0.72)`);
-                g.addColorStop(1, `rgba(${lm.color}, 0)`);
-                ctx.fillStyle = g;
-                ctx.beginPath();
-                ctx.arc(p.sx, p.sy, lm.rad, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            if (!reduceMotion) {
-                for (let b = 0; b < 2; b++) {
-                    const phase = ((t * 0.22 + b * 0.5) % 1);
-                    const u = -1.45 + phase * 2.90;
-                    const v = -0.28 * Math.sin((u / 1.45) * (Math.PI / 2));
-                    const z = evalSurface(u, v, t) + 0.06;
-                    const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
-                    const glow = ctx.createRadialGradient(p.sx, p.sy, 0.5, p.sx, p.sy, 11);
-                    glow.addColorStop(0, "rgba(255, 255, 255, 0.92)");
-                    glow.addColorStop(0.4, "rgba(251, 191, 36, 0.65)");
-                    glow.addColorStop(1, "rgba(251, 191, 36, 0)");
-                    ctx.fillStyle = glow;
-                    ctx.beginPath();
-                    ctx.arc(p.sx, p.sy, 11, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
+            // 3. Right-side quantum bump iso-contours & apex light + Left-side 3D glass Bloch sphere
+            drawRightBumpEffects(t, cosYaw, sinYaw, cosPitch, sinPitch);
+            drawBlochSphere(t, cosYaw, sinYaw, cosPitch, sinPitch);
         }
 
         function tick(now) {
@@ -1182,21 +1485,82 @@ document.addEventListener("DOMContentLoaded", function () {
             rafId = window.requestAnimationFrame(tick);
         }
 
+        function mapCursorToSurface(mx, my) {
+            return {
+                u: Math.max(-2.75, Math.min(2.75, (mx - width * 0.5) / (width * 0.145))),
+                v: Math.max(-1.25, Math.min(1.25, -(my - height * 0.62) / (height * 0.22)))
+            };
+        }
+
         heroEl.addEventListener("mousemove", e => {
             const rect = heroEl.getBoundingClientRect();
             const mx = e.clientX - rect.left;
             const my = e.clientY - rect.top;
             targetCamX = Math.max(-1, Math.min(1, (mx / width - 0.5) * 2));
             targetCamY = Math.max(-1, Math.min(1, (my / height - 0.5) * 2));
-            targetU = Math.max(-2.6, Math.min(2.6, (mx - width * 0.5) / (width * 0.17)));
-            targetV = Math.max(-1.6, Math.min(1.6, -(my - height * 0.56) / (height * 0.26)));
-            pointerActive = true;
+            const mapped = mapCursorToSurface(mx, my);
+
+            if (mx < width * 0.44) {
+                hoverZone = "left";
+                ball.targetU = Math.max(-2.70, Math.min(-0.95, mapped.u));
+                ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                if (ball.state === "idle" || ball.state === "lifting") {
+                    ball.u = ball.targetU;
+                    ball.v = ball.targetV;
+                    ball.z = 2.65;
+                    ball.vz = -0.5;
+                    ball.state = "dropping";
+                }
+                bump.targetStrength = 0.88;
+            } else if (mx > width * 0.56) {
+                hoverZone = "right";
+                bump.targetU = Math.max(0.95, Math.min(2.70, mapped.u));
+                bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                bump.targetStrength = 1.28;
+                if (ball.state === "landed" || ball.state === "dropping") {
+                    ball.state = "lifting";
+                }
+            } else {
+                hoverZone = "center";
+                bump.targetStrength = 0.22;
+                if (ball.state === "landed" || ball.state === "dropping") {
+                    ball.state = "lifting";
+                }
+            }
         });
 
         heroEl.addEventListener("mouseleave", () => {
-            pointerActive = false;
+            hoverZone = "center";
             targetCamX = 0;
             targetCamY = 0;
+            bump.targetStrength = 0.16;
+            if (ball.state === "landed" || ball.state === "dropping") {
+                ball.state = "lifting";
+            }
+        });
+
+        heroEl.addEventListener("click", e => {
+            if (e.target && e.target.closest("a, button")) return;
+            const rect = heroEl.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            const mapped = mapCursorToSurface(mx, my);
+            if (mx < width * 0.46) {
+                ball.targetU = Math.max(-2.70, Math.min(-0.95, mapped.u));
+                ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                ball.u = ball.targetU;
+                ball.v = ball.targetV;
+                ball.z = 2.75;
+                ball.vz = -0.7;
+                ball.state = "dropping";
+            } else if (mx > width * 0.54) {
+                bump.targetU = Math.max(0.95, Math.min(2.70, mapped.u));
+                bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                bump.u = bump.targetU;
+                bump.v = bump.targetV;
+                bump.targetStrength = 1.32;
+                injectWaveRipple(bump.u, bump.v, 0.62, 0.48);
+            }
         });
 
         window.addEventListener("resize", () => {
@@ -1208,6 +1572,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const heroObs = new IntersectionObserver(entries => {
                 heroVisible = entries[0].isIntersecting;
                 if (heroVisible && !reduceMotion && !rafId) {
+                    lastTimeMs = 0;
                     rafId = window.requestAnimationFrame(tick);
                 } else if (!heroVisible && rafId) {
                     window.cancelAnimationFrame(rafId);

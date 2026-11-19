@@ -201,12 +201,12 @@ code {
     position: relative;
     overflow: hidden;
     color: var(--white-out);
-    background: url('https://images.unsplash.com/photo-1532187863486-abf9db5a9997?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+    background: radial-gradient(ellipse at 82% 14%, #104970 0%, #071d38 42%, #030b1a 82%, #01050d 100%);
 }
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(155deg, rgba(13, 28, 60, 0.90) 0%, rgba(22, 50, 102, 0.82) 58%, rgba(45, 96, 175, 0.76) 100%);
+    background: radial-gradient(ellipse at 50% 44%, rgba(3, 11, 26, 0.52) 0%, rgba(3, 11, 26, 0.14) 52%, rgba(2, 6, 16, 0.35) 100%);
     z-index: 0;
 }
 #hero-lattice-canvas {
@@ -221,6 +221,7 @@ code {
     position: relative;
     z-index: 2;
     max-width: 880px;
+    text-shadow: 0 2px 24px rgba(2, 8, 20, 0.72);
 }
 
 .availability-badge {
@@ -1356,7 +1357,7 @@ html[data-theme="dark"] #header.scrolled #mobile-menu-toggle {
     color: #e2e8f0;
 }
 html[data-theme="dark"] .hero-overlay {
-    background: linear-gradient(155deg, rgba(8, 15, 32, 0.90) 0%, rgba(15, 32, 68, 0.83) 60%, rgba(30, 64, 124, 0.76) 100%);
+    background: radial-gradient(ellipse at 50% 44%, rgba(2, 8, 20, 0.56) 0%, rgba(3, 11, 26, 0.18) 54%, rgba(1, 5, 13, 0.42) 100%);
 }
 html[data-theme="dark"] .btn-primary {
     background-color: #f8fafc;
