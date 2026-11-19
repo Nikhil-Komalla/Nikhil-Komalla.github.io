@@ -1,0 +1,253 @@
+{
+  "header": {
+    "name": "Nikhil Komalla",
+    "subtitle": "Ph.D. Candidate in Computational Materials Science & MLIP Engineering",
+    "location": "University Park, PA, USA",
+    "email": "nikhil.komalla.00@gmail.com",
+    "psuEmail": "nxk5431@psu.edu",
+    "linkedin": "https://www.linkedin.com/in/nikhil-komalla/",
+    "scholar": "https://scholar.google.com/citations?user=gJdg6OIAAAAJ",
+    "orcid": "https://orcid.org/0000-0002-0997-523X",
+    "github": "https://github.com/Nikhil-Komalla",
+    "groupName": "Materials & Minerals Theory (MMT) Group",
+    "groupUrl": "https://sites.google.com/view/nelsondzade/home",
+    "availability": "Open to Full-Time Roles Starting Summer 2027"
+  },
+  "education": [
+    {
+      "degree": "Ph.D. in Energy and Mineral Engineering (Minor: Computational Materials)",
+      "institution": "The Pennsylvania State University, University Park, PA, USA",
+      "period": "Aug 2022 - Expected Summer 2027",
+      "gpa": "GPA: 3.54 / 4.00",
+      "coursework": "Quantum Chemistry, Computational Thermodynamics, Solid State Materials, Electrochemistry, Interfacial Physical-Chemical Systems, Statistics for Experimental Methods"
+    },
+    {
+      "degree": "B.Tech. in Chemical Engineering",
+      "institution": "Osmania University, Hyderabad, India",
+      "period": "Aug 2017 - May 2021",
+      "gpa": "GPA: 8.17 / 10.00",
+      "coursework": "Physical Chemistry, Thermodynamics, Chemical Reaction Engineering, Transport Phenomena, Heat & Mass Transfer, Material Science, Machine Learning with MATLAB"
+    }
+  ],
+  "categories": {
+    "catalysis": {
+      "label": "Computational Catalysis",
+      "shortLabel": "Comp. Catalysis",
+      "targetRole": "Computational Catalysis & Electrocatalyst Discovery Scientist",
+      "summary": "Ph.D. Candidate (Summer 2027) specializing in computational catalysis, spin-polarized DFT, Machine-Learned Interatomic Potentials (MLIPs), ab initio MD (AIMD), and microkinetic/thermodynamic screening for green hydrogen (HER/OER, AEMWE) and solar fuel catalysts.",
+      "skillGroups": [
+        {
+          "name": "Catalysis & Quantum Chemistry",
+          "items": "VASP, Quantum ESPRESSO, PySCF, Spin-Polarized DFT+U, DFT-D3, NEB Transition States, CHE Free Energy Diagrams, Microkinetic Modeling, Electronic Structure Analysis (DOS/COHP/Bader)"
+        },
+        {
+          "name": "MLIPs, AIMD & Solvation MD",
+          "items": "OC25 eSEN & Magnetic MACE/mMACE Fine-Tuning, Multi-MLIP Screening (GRACE, MatterSim, UPET, CHGNet, SevenNet), Ab Initio MD (AIMD), Classical MD with MLIPs, Explicit Microsolvation"
+        },
+        {
+          "name": "Programming & HPC",
+          "items": "Python, PyTorch, ASE, pymatgen, METADISE, C++, MATLAB, MongoDB, SLURM Multi-GPU (A100), Bash, Git"
+        }
+      ],
+      "experienceOrder": ["psu_fns", "psu_sno", "psu_review", "iict", "osmania", "krest", "psu_gta", "iith"]
+    },
+    "materials": {
+      "label": "Computational Materials",
+      "shortLabel": "Comp. Materials",
+      "targetRole": "Computational Materials Scientist",
+      "summary": "Computational Materials Scientist (Ph.D. Summer 2027) uniting first-principles DFT, AIMD, equivariant & magnetic MLIPs, classical MD, and continuum CFD/thermal modeling to discover oxides, sulfides, heterojunctions, and functional energy materials.",
+      "skillGroups": [
+        {
+          "name": "Multiscale Materials Modeling",
+          "items": "Density Functional Theory (VASP, Quantum ESPRESSO), Ab Initio MD (AIMD), Classical MD with MLIPs, Crystal Surface/Interface Cleaving, Defect/Doping Thermodynamics, ANSYS CFD"
+        },
+        {
+          "name": "MLIPs & Materials Informatics",
+          "items": "Foundation MLIP Fine-Tuning (OC25 eSEN, MACE, Magnetic mMACE), Committee Uncertainty & Active Learning, High-Throughput Screening, Structure-Property Relationships, Agentic Structure Inference"
+        },
+        {
+          "name": "Scientific Stack & HPC",
+          "items": "Python, C++, MATLAB, R, PyTorch, ASE, pymatgen, METADISE, MongoDB, SLURM Multi-GPU Clusters (A100), Git"
+        }
+      ],
+      "experienceOrder": ["psu_sno", "psu_fns", "psu_review", "iict", "iith", "krest", "osmania", "psu_gta"]
+    },
+    "electrochemistry": {
+      "label": "Computational Electrochemistry (Battery & Solar)",
+      "shortLabel": "Battery & Solar",
+      "targetRole": "Computational Electrochemist (Batteries, Electrolyzers & Solar Energy)",
+      "summary": "Computational researcher (Ph.D. Summer 2027) modeling electrochemical interfaces, solid-liquid solvation dynamics, redox mechanisms, and band-aligned photo/electrocatalysts using DFT, AIMD, MLIP-MD, and experimental electrochemical cell testing.",
+      "skillGroups": [
+        {
+          "name": "Electrochemical & Interfacial Modeling",
+          "items": "Spin-Polarized DFT (VASP), Ab Initio MD (AIMD), Classical MD with MLIPs for Explicit Solvation & Ion/H2O Transport, PCET & CHE Thermodynamics, Band Alignment & Redox Potentials"
+        },
+        {
+          "name": "Electrolyzer, Battery & Solar Domains",
+          "items": "Anion Exchange Membrane Water Electrolyzers (AEMWE), Fuel Cells, Microbial & Photo-Electrochemical Cells, Photocatalytic Heterojunctions, Technoeconomic Analysis (Pro/II, AVEVA)"
+        },
+        {
+          "name": "MLIPs, Code & Data Tools",
+          "items": "MACE/mMACE, OC25 eSEN, CHGNet, GRACE, MatterSim, Python, PyTorch, ASE, pymatgen, MATLAB, SLURM GPU Automation"
+        }
+      ],
+      "experienceOrder": ["psu_fns", "psu_sno", "osmania", "krest", "psu_review", "psu_gta", "iict", "iith"]
+    },
+    "modeling": {
+      "label": "Computational Modeling",
+      "shortLabel": "Comp. Modeling",
+      "targetRole": "Multiscale Computational Modeling & Simulation Scientist",
+      "summary": "Versatile computational modeler (Ph.D. Summer 2027) spanning quantum mechanics (DFT/AIMD), mesoscale MLIP classical MD and Kinetic Monte Carlo/reaction networks, to continuum CFD (ANSYS) and process simulation (AVEVA/Pro-II).",
+      "skillGroups": [
+        {
+          "name": "Atomistic, Quantum & MLMD",
+          "items": "DFT (VASP, Quantum ESPRESSO, PySCF), Ab Initio MD (AIMD), Classical MD with MLIPs, Force-Field Surrogate Training (OC25 eSEN, MACE), Rare-Event / Transition State Modeling (NEB)"
+        },
+        {
+          "name": "Continuum & Process Simulation",
+          "items": "Computational Fluid Dynamics (ANSYS Fluent / TFB), Process Simulation (Pro/II, AVEVA), Chemical Reaction & Transport Engineering, Thermodynamics & Refrigeration Cycles"
+        },
+        {
+          "name": "Numerical Computing & HPC",
+          "items": "Python, C++, MATLAB, R, PyTorch, TensorFlow, NumPy, SciPy, Pandas, MongoDB, SLURM GPU/MPI Parallelism, Git"
+        }
+      ],
+      "experienceOrder": ["psu_fns", "psu_sno", "iith", "iict", "krest", "osmania", "psu_review", "psu_gta"]
+    },
+    "ai_science": {
+      "label": "Computational AI for Science (GPU, Agentic & MLIPs)",
+      "shortLabel": "AI for Science",
+      "targetRole": "AI for Science & Machine-Learned Interatomic Potentials Engineer",
+      "summary": "AI-for-Science researcher & Ph.D. Candidate (Summer 2027) building GPU-accelerated fine-tuning pipelines (OC25 eSEN, magnetic MACE/mMACE), agentic experimental-to-structure systems, MLIP Bayesian uncertainty hubs, and active-learning DFT loops.",
+      "skillGroups": [
+        {
+          "name": "MLIP Architectures & Fine-Tuning",
+          "items": "Equivariant GNNs (e3nn, OC25 eSEN, MACE, Magnetic mMACE, NequIP), Foundation Models (GRACE, UPET, MatterSim, CHGNet, SevenNet), Backbone Freezing, Conservative Force Training"
+        },
+        {
+          "name": "Agentic AI, Active Learning & MD",
+          "items": "Multi-Model Committee Uncertainty (sigma), Automated Active-Learning Loops, Agentic Structure Prediction (LLM + XRD/Raman + HRMC), Classical MD with MLIPs, AIMD Data Generation"
+        },
+        {
+          "name": "GPU Infrastructure & Software Engineering",
+          "items": "PyTorch, CUDA, SLURM Multi-GPU (A100) Workflows, Python, FastAPI, LMDB, ASE, pymatgen, MongoDB, TensorFlow/Keras, Git"
+        }
+      ],
+      "experienceOrder": ["psu_fns", "psu_sno", "iict", "psu_review", "krest", "osmania", "iith", "psu_gta"]
+    }
+  },
+  "researchExperiences": [
+    {
+      "id": "psu_fns",
+      "title": "Graduate Researcher — Fe-Ni Sulfide Electrocatalysts (DFT, MLIP & MD)",
+      "organization": "The Pennsylvania State University (Advisor: Dr. Nelson Y. Dzade)",
+      "period": "Aug 2022 - Present",
+      "bullets": [
+        "Performed spin-polarized DFT and AIMD simulations for adsorption free energies, surface stability, and electronic structure modulation across 30+ active sites to derive kinetics-informed HER/OER mechanisms.",
+        "Fine-tuned equivariant foundation and magnetic MLIPs (OC25 eSEN and Magnetic MACE/mMACE) to run GPU-accelerated classical MD and capture explicit interfacial solvation effects."
+      ]
+    },
+    {
+      "id": "psu_sno",
+      "title": "Graduate Researcher — SrNb2O6 Photocatalysts & Multi-MLIP Screening",
+      "organization": "The Pennsylvania State University (Advisor: Dr. Nelson Y. Dzade)",
+      "period": "Aug 2022 - Present",
+      "bullets": [
+        "Engineered doped oxide catalysts for band-gap optimization; executed DFT across 100+ active site combinations, elucidating 11 reaction mechanisms and transition state structures.",
+        "Built high-throughput MLIP screening & MD workflows with committee uncertainty quantification to guide explicit solvation studies and automate VASP validation."
+      ]
+    },
+    {
+      "id": "psu_review",
+      "title": "Lead Author — Rational Electrocatalyst Design Review (Small, 2026)",
+      "organization": "The Pennsylvania State University (Materials & Minerals Theory (MMT) Group)",
+      "period": "2024 - 2026",
+      "bullets": [
+        "Synthesized synergistic experimental, DFT, and ML-accelerated frameworks for efficient and durable water electrolysis catalysts (Small, DOI: 10.1002/smll.202511010)."
+      ]
+    },
+    {
+      "id": "iict",
+      "title": "Undergraduate Researcher — ML-Driven Catalyst Design (OCM Reaction)",
+      "organization": "Indian Institute of Chemical Technology (IICT), Hyderabad (Advisor: Dr. Sumana Chenna)",
+      "period": "Nov 2020 - May 2021",
+      "bullets": [
+        "Trained supervised ML regressors and classifiers on 300+ experimental oxidative coupling of methane (OCM) catalyst data points in MATLAB, achieving 83.3% test accuracy."
+      ]
+    },
+    {
+      "id": "osmania",
+      "title": "Undergraduate Researcher — Photoelectrochemical & Microbial Fuel Cells",
+      "organization": "Osmania University, India (Advisor: Dr. Sriram Devanathan)",
+      "period": "Jan 2018 - May 2021",
+      "bullets": [
+        "Conducted photoelectrochemical hydrogen production testing and engineered a microbial electrochemical fuel cell prototype achieving ~0.57 V open-circuit voltage."
+      ]
+    },
+    {
+      "id": "iith",
+      "title": "Undergraduate Research Intern — CFD Simulation of Tapered Fluidized Beds",
+      "organization": "Indian Institute of Technology (IIT) Hyderabad (Advisor: Dr. Narasimha Mangadoddy)",
+      "period": "May 2019 - Jun 2019",
+      "bullets": [
+        "Built physics-based multiphase CFD models in ANSYS (meshing, solver setup), predicting pressure drops (Delta P ~ 1161 Pa) validated against experiments."
+      ]
+    },
+    {
+      "id": "psu_gta",
+      "title": "Graduate Teaching Assistant — Thermodynamics & Solar Energy Conversion",
+      "organization": "The Pennsylvania State University, USA",
+      "period": "Aug 2022 - May 2025",
+      "bullets": [
+        "Mentored 90+ undergraduates across individual and capstone team projects in Design of Solar Energy Conversion Systems and Engineering Thermodynamics."
+      ]
+    },
+    {
+      "id": "krest",
+      "title": "Process (R&D) Engineer — Electrolyzers, Fuel Cells & Solar Thermal",
+      "organization": "Krest Engineering & Technologies Pvt. Ltd., India",
+      "period": "Sep 2021 - Dec 2021",
+      "bullets": [
+        "Executed techno-economic analyses for hydrogen fuel cells and water electrolyzers, green transition roadmaps, and a Concentrated Solar Power (CSP) feasibility basis for DRDO."
+      ]
+    }
+  ],
+  "hackathons": [
+    {
+      "name": "AtomInfer (c0mpiled-6 Hackathon)",
+      "url": "https://github.com/nishantaMishra/atomInfer",
+      "summary": "Built an agentic AI pipeline & FastAPI/Three.js platform converting raw experimental XRD/Raman/PDF characterization into DFT-ready atomic structures with automated Materials Project lookup and HRMC refinement."
+    },
+    {
+      "name": "Usefulness Boundary Hub (Open Scientific Intelligence Hackathon 2026)",
+      "url": "https://github.com/bawiz/osi-mlips",
+      "summary": "Co-built a curated MLIP usefulness & failure-mode catalogue covering MACE/NequIP checkpoints across Descriptive, Mechanistic, and Bayesian Uncertainty Quantification lenses with a grounded model recommender."
+    },
+    {
+      "name": "Phase Change Materials for Cold Transportation (GotLatent)",
+      "url": "https://drive.google.com/file/d/1wG5LGMd0ky_kQAOmwnrB6vEO5vgVhtbU/view?usp=drive_link",
+      "summary": "Designed a latent-heat Phase Change Material (PCM) thermal storage concept and energy balance framework for zero-emission cold-chain freight transport."
+    }
+  ],
+  "publications": [
+    "N. Komalla, N. Y. Dzade, 'Rational Design Strategies Toward Efficient and Stable Electrocatalysts for Hydrogen Production via Water Electrolysis: A Comprehensive Review,' Small, 2026 (DOI: 10.1002/smll.202511010).",
+    "P. M. Bacirhonde, ..., N. Komalla, N. Y. Dzade, et al., 'Understanding the Metal-Center Mediated Adsorption and Redox Mechanisms in a FeMn(NbTa)2O6 Columbite Material for Anion Exchange Membrane Water Electrolyzers,' Adv. Energy Mater., 2025, 2404479.",
+    "T. L. L. Doan, D. C. Nguyen, N. Komalla, et al., 'Molybdenum oxide/nickel molybdenum oxide heterostructures hybridized active platinum co-catalyst toward superb-efficiency water splitting catalysis,' J. Colloid Interface Sci., 670, 12-27, 2024.",
+    "O. F. Awe, H. I. Eya, R. Amaral, N. Komalla, P. Nbelayim, N. Y. Dzade, 'Unraveling the origin of the high photocatalytic properties of earth-abundant TiO2/FeS2 heterojunctions: insights from first-principles DFT,' Phys. Chem. Chem. Phys., 26, 2024.",
+    "P. M. Bacirhonde, ..., N. Komalla, N. Y. Dzade, et al., 'Ruthenium Engineered A2B2O6-Hybrid Columbite Ferrite for Bifunctional pH-Universal Water Splitting,' Adv. Energy Mater., 13(23), 2023.",
+    "N. Komalla (Co-author), 'How to Learn Chemical Engineering in 100 Solved Problems? & Be Industry Ready' (ISBN: 978-93-5416-205-3, 2020) and AVEVA Process Simulation problem contributor (ISBN: 978-93-54193-292-2, 2021)."
+  ],
+  "awards": [
+    "2025: Frank J. Vastola and Ruth J. St. Clair Vastola Graduate Scholarship (Penn State)",
+    "2024: First Place, Student Poster Presentation — Hydrogen Americas 2024 Summit & Exhibition",
+    "2023: Second Place, PSU Graduate Research Exhibition Video ('Computer-Accelerated Research for Green Hydrogen')",
+    "2020: Second Place, Inter-College Miniature Model Competition (CO2 Transcritical Cycle, Pro/II)",
+    "2019: First Place, Miniature Model Competition (Microbrewery Wastewater Treatment via Microbial Fuel Cell)"
+  ],
+  "conferences": [
+    "2026: Poster Presentation, Gordon Research Conference (GRC) on Catalysis, USA",
+    "2025: International Oral Presentation, 5th International Solar Fuels Conference (ISF-5), UK",
+    "2025: Oral Presentation, 29th North American Catalysis Society Meeting (NAM29), USA",
+    "2024-2025: Graduate Student Relations Chair (AEE PSU Chapter); PSU Startup Week Student Committee; MIT Energy Conference"
+  ]
+}

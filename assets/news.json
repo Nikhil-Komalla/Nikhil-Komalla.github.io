@@ -1,84 +1,132 @@
 [
   {
-    "id": "career-summer-2027",
-    "date": "2026 • Career Update",
-    "category": "Open to Work",
-    "title": "Open to Full-Time Opportunities Starting Summer 2027",
-    "summary": "As I enter the final phase of my Ph.D. at Penn State, I am actively looking ahead to full-time R&D roles starting Summer 2027 in Computational Materials Science, MLIP / AI-for-Science Engineering, and Clean Energy Electrocatalysis.",
+    "id": "grc-catalysis-2026",
+    "date": "2026 • Gordon Research Conference",
+    "category": "Conference Poster",
+    "title": "Poster Presentation at Gordon Research Conference (GRC) – Catalysis, USA",
+    "summary": "Presented our latest DFT and machine-learned interatomic potential (MLIP) insights on transition-metal sulfide & oxide electrocatalysts at GRC Catalysis. Open to full-time Computational Materials & AI-for-Science roles starting Summer 2027.",
     "tags": [
-      "#OpenToWork",
-      "#Summer2027",
-      "#ComputationalMaterials",
+      "#GRCCatalysis",
+      "#DFT",
       "#MLIP",
-      "#CleanEnergy"
+      "#GreenHydrogen",
+      "#Summer2027"
     ],
-    "url": "https://www.linkedin.com/in/nikhil-komalla/",
-    "ctaLabel": "Connect on LinkedIn",
+    "url": "https://www.linkedin.com/in/nikhil-komalla/recent-activity/all/",
+    "ctaLabel": "LinkedIn Activity",
+    "embedUrl": ""
+  },
+  {
+    "id": "osi-hackathon-2026",
+    "date": "Oct 2026 • Hackathon",
+    "category": "OSI Hackathon 2026",
+    "title": "Usefulness Boundary Hub (osi-mlips) — Open Scientific Intelligence Hackathon #147",
+    "summary": "Co-built a multi-lens MLIP evaluation hub mapping MACE and NequIP usefulness boundaries across Descriptive failure modes, Mechanistic notes, and Bayesian UQ with a grounded model recommender.",
+    "tags": [
+      "#OSIHackathon2026",
+      "#MLIP",
+      "#MACE",
+      "#NequIP",
+      "#UQ"
+    ],
+    "url": "https://scientificintelligence.org/campaigns/osi-hackathon-2026/submissions/147",
+    "ctaLabel": "Submission #147",
+    "embedUrl": ""
+  },
+  {
+    "id": "atominfer-c0mpiled6",
+    "date": "2026 • Hackathon",
+    "category": "c0mpiled-6 Hackathon",
+    "title": "Team AtomInfer — Agent Turning Experimental Data into Atomic Structures",
+    "summary": "Built an agentic web platform (FastAPI + Three.js + HRMC) with Anirban Phukan and Nishant Mishra to parse experimental XRD/Raman spectra, query Materials Project, and output simulation-ready structures.",
+    "tags": [
+      "#AtomInfer",
+      "#AgenticAI",
+      "#c0mpiled6",
+      "#MaterialsProject"
+    ],
+    "url": "https://www.compiled.sh/articles/c0mpiled-6-ai-for-productivity-research#team-atominfer",
+    "ctaLabel": "Read Article",
     "embedUrl": ""
   },
   {
     "id": "small-review-2026",
     "date": "2026 • Publication",
     "category": "First-Author Review",
-    "title": "Comprehensive Electrocatalyst Design Review Published in Small",
-    "summary": "Excited to share our comprehensive first-author review in Small examining rational electronic-structure, strain, defect, and computational design strategies toward efficient and durable green hydrogen water electrolysis.",
+    "title": "Comprehensive Water Electrolysis Catalyst Design Review Published in Small",
+    "summary": "First-author review with Dr. Nelson Y. Dzade synthesized rational electronic-structure modulation, active-site engineering, and computational design rules for durable green hydrogen electrocatalysts.",
     "tags": [
       "#Small",
-      "#GreenHydrogen",
       "#Electrocatalysis",
+      "#WaterSplitting",
       "#PennState"
     ],
     "url": "https://doi.org/10.1002/smll.202511010",
-    "ctaLabel": "Read Review (DOI)",
+    "ctaLabel": "Read Paper (DOI)",
     "embedUrl": ""
   },
   {
-    "id": "mlip-screening-2026",
-    "date": "2026 • Research Milestone",
-    "category": "MLIP & HPC Workflows",
-    "title": "Fine-Tuning OC25 eSEN & Magnetic MACE/mMACE + Multi-MLIP Surface Screening",
-    "summary": "Built automated multi-GPU pipelines for spin-polarized MLIP fine-tuning, explicit microsolvation convergence, multi-model committee uncertainty (sigma) active learning, and automated VASP DFT validation workflows on A100 clusters.",
+    "id": "isf5-uk-2025",
+    "date": "2025 • International Talk",
+    "category": "Conference Oral (UK)",
+    "title": "International Oral Presentation at 5th International Solar Fuels Conference (ISF-5)",
+    "summary": "Delivered an international oral presentation in the UK showcasing computational discovery, doping strategies, and explicit solvation dynamics of photocatalytic and electrocatalytic water-splitting materials.",
     "tags": [
-      "#MachineLearning",
-      "#MLIP",
-      "#MACE",
-      "#FairChem",
-      "#ActiveLearning"
+      "#ISF5",
+      "#SolarFuels",
+      "#Photocatalysis",
+      "#AIMD"
     ],
     "url": "https://www.linkedin.com/in/nikhil-komalla/recent-activity/all/",
-    "ctaLabel": "View LinkedIn Activity",
+    "ctaLabel": "LinkedIn Activity",
+    "embedUrl": ""
+  },
+  {
+    "id": "nam29-vastola-2025",
+    "date": "2025 • Talk & Award",
+    "category": "NAM29 & Scholarship",
+    "title": "Oral Talk at NAM29 (USA) & Frank J. Vastola Graduate Scholarship",
+    "summary": "Presented oral research on catalyst surface reaction mechanisms at the 29th North American Catalysis Society Meeting (NAM29) and received Penn State's Frank J. and Ruth J. St. Clair Vastola Graduate Scholarship.",
+    "tags": [
+      "#NAM29",
+      "#Catalysis",
+      "#PennState",
+      "#Award"
+    ],
+    "url": "https://www.linkedin.com/in/nikhil-komalla/recent-activity/all/",
+    "ctaLabel": "LinkedIn Activity",
     "embedUrl": ""
   },
   {
     "id": "aem-columbite-2025",
     "date": "2025 • Publication",
-    "category": "Research Highlight",
-    "title": "Metal-Center Redox Mechanisms for AEM Water Electrolyzers in Advanced Energy Materials",
-    "summary": "Our collaborative study published in Advanced Energy Materials uncovers how multi-metal coordination centers in FeMn(NbTa)2O6 columbite oxides mediate intermediate adsorption and redox stability in anion exchange membrane water electrolyzers.",
+    "category": "Adv. Energy Mater.",
+    "title": "Metal-Center Redox Mechanisms in FeMn(NbTa)2O6 Columbite for AEM Electrolyzers",
+    "summary": "Published in Advanced Energy Materials elucidating metal-center intermediate adsorption thermodynamics and redox switching mechanisms enabling durable Anion Exchange Membrane Water Electrolyzers (AEMWE).",
     "tags": [
-      "#AdvancedEnergyMaterials",
+      "#AdvEnergyMater",
       "#AEMWE",
       "#DFT",
-      "#Catalysis"
+      "#Electrocatalysis"
     ],
     "url": "https://doi.org/10.1002/aenm.202404479",
     "ctaLabel": "View Paper (DOI)",
     "embedUrl": ""
   },
   {
-    "id": "water-splitting-2024",
-    "date": "2024 • Publications",
-    "category": "Catalysis & DFT",
-    "title": "New Insights into Heterostructured Electrocatalysts & TiO2/FeS2 Photocatalysts",
-    "summary": "Published two collaborative DFT-driven investigations in Journal of Colloid and Interface Science and Physical Chemistry Chemical Physics explaining interfacial charge transfer and active-site synergy in earth-abundant and hybrid water-splitting systems.",
+    "id": "hydrogen-americas-2024",
+    "date": "2024 • First Place Award",
+    "category": "Award & Honors",
+    "title": "1st Place Student Poster at Hydrogen Americas Summit & 2x Best Presentation Honors",
+    "summary": "Awarded First Place in the Student Poster Presentation at the Hydrogen Americas 2024 Summit & Exhibition following Second Place in Penn State's 2023 Graduate Research Exhibition Video Competition.",
     "tags": [
-      "#JCIS",
-      "#PCCP",
-      "#Photocatalysis",
-      "#WaterSplitting"
+      "#HydrogenAmericas",
+      "#BestPoster",
+      "#GreenHydrogen",
+      "#FirstPlace"
     ],
-    "url": "https://scholar.google.com/citations?user=gJdg6OIAAAAJ",
-    "ctaLabel": "Google Scholar Profile",
+    "url": "https://www.linkedin.com/in/nikhil-komalla/",
+    "ctaLabel": "View Profile",
     "embedUrl": ""
   }
 ]
