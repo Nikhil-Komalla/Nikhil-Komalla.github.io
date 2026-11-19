@@ -1,0 +1,84 @@
+[
+  {
+    "id": "career-summer-2027",
+    "date": "2026 • Career Update",
+    "category": "Open to Work",
+    "title": "Open to Full-Time Opportunities Starting Summer 2027",
+    "summary": "As I enter the final phase of my Ph.D. at Penn State, I am actively looking ahead to full-time R&D roles starting Summer 2027 in Computational Materials Science, MLIP / AI-for-Science Engineering, and Clean Energy Electrocatalysis.",
+    "tags": [
+      "#OpenToWork",
+      "#Summer2027",
+      "#ComputationalMaterials",
+      "#MLIP",
+      "#CleanEnergy"
+    ],
+    "url": "https://www.linkedin.com/in/nikhil-komalla/",
+    "ctaLabel": "Connect on LinkedIn",
+    "embedUrl": ""
+  },
+  {
+    "id": "small-review-2026",
+    "date": "2026 • Publication",
+    "category": "First-Author Review",
+    "title": "Comprehensive Electrocatalyst Design Review Published in Small",
+    "summary": "Excited to share our comprehensive first-author review in Small examining rational electronic-structure, strain, defect, and computational design strategies toward efficient and durable green hydrogen water electrolysis.",
+    "tags": [
+      "#Small",
+      "#GreenHydrogen",
+      "#Electrocatalysis",
+      "#PennState"
+    ],
+    "url": "https://doi.org/10.1002/smll.202511010",
+    "ctaLabel": "Read Review (DOI)",
+    "embedUrl": ""
+  },
+  {
+    "id": "mlip-screening-2026",
+    "date": "2026 • Research Milestone",
+    "category": "MLIP & HPC Workflows",
+    "title": "Fine-Tuning OC25 eSEN & Magnetic MACE/mMACE + Multi-MLIP Surface Screening",
+    "summary": "Built automated multi-GPU pipelines for spin-polarized MLIP fine-tuning, explicit microsolvation convergence, multi-model committee uncertainty (sigma) active learning, and automated VASP DFT validation workflows on A100 clusters.",
+    "tags": [
+      "#MachineLearning",
+      "#MLIP",
+      "#MACE",
+      "#FairChem",
+      "#ActiveLearning"
+    ],
+    "url": "https://www.linkedin.com/in/nikhil-komalla/recent-activity/all/",
+    "ctaLabel": "View LinkedIn Activity",
+    "embedUrl": ""
+  },
+  {
+    "id": "aem-columbite-2025",
+    "date": "2025 • Publication",
+    "category": "Research Highlight",
+    "title": "Metal-Center Redox Mechanisms for AEM Water Electrolyzers in Advanced Energy Materials",
+    "summary": "Our collaborative study published in Advanced Energy Materials uncovers how multi-metal coordination centers in FeMn(NbTa)2O6 columbite oxides mediate intermediate adsorption and redox stability in anion exchange membrane water electrolyzers.",
+    "tags": [
+      "#AdvancedEnergyMaterials",
+      "#AEMWE",
+      "#DFT",
+      "#Catalysis"
+    ],
+    "url": "https://doi.org/10.1002/aenm.202404479",
+    "ctaLabel": "View Paper (DOI)",
+    "embedUrl": ""
+  },
+  {
+    "id": "water-splitting-2024",
+    "date": "2024 • Publications",
+    "category": "Catalysis & DFT",
+    "title": "New Insights into Heterostructured Electrocatalysts & TiO2/FeS2 Photocatalysts",
+    "summary": "Published two collaborative DFT-driven investigations in Journal of Colloid and Interface Science and Physical Chemistry Chemical Physics explaining interfacial charge transfer and active-site synergy in earth-abundant and hybrid water-splitting systems.",
+    "tags": [
+      "#JCIS",
+      "#PCCP",
+      "#Photocatalysis",
+      "#WaterSplitting"
+    ],
+    "url": "https://scholar.google.com/citations?user=gJdg6OIAAAAJ",
+    "ctaLabel": "Google Scholar Profile",
+    "embedUrl": ""
+  }
+]

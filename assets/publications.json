@@ -1,0 +1,139 @@
+[
+  {
+    "title": "Rational Design Strategies Toward Efficient and Stable Electrocatalysts for Hydrogen Production via Water Electrolysis: A Comprehensive Review",
+    "authors": [
+      "Nikhil Komalla",
+      "Nelson Y. Dzade"
+    ],
+    "journal": "Small",
+    "year": 2026,
+    "role": "First Author • Comprehensive Review",
+    "featured": true,
+    "doi": "10.1002/smll.202511010",
+    "link": "https://doi.org/10.1002/smll.202511010",
+    "highlight": "Synthesizes mechanistic descriptors, electronic structure tuning, and rational design principles for high-activity, durable HER and OER electrocatalysts.",
+    "tags": [
+      "Electrocatalysis",
+      "Water Electrolysis",
+      "Green Hydrogen",
+      "Comprehensive Review"
+    ]
+  },
+  {
+    "title": "Understanding the Metal-Center Mediated Adsorption and Redox Mechanisms in a FeMn(NbTa)2O6 Columbite Material for Anion Exchange Membrane Water Electrolyzers",
+    "authors": [
+      "Patrick M. Bacirhonde",
+      "Devendra Shrestha",
+      "Kyoungin Kang",
+      "Esensil Man Hia",
+      "Nikhil Komalla",
+      "Nelson Y. Dzade",
+      "Merve Buldu-Akturk",
+      "Michelle P. Browne",
+      "Milan Babu Poudel",
+      "Dong Jin Yoo",
+      "Eun-Suk Jeong",
+      "Ahmed Yousef Mohamed",
+      "Byoung Gun Han",
+      "Deok-Yong Cho",
+      "Matthew T. Curnan",
+      "Geun Ho Gu",
+      "Jeong Woo Han",
+      "Chan Hee Park"
+    ],
+    "journal": "Advanced Energy Materials",
+    "year": 2025,
+    "role": "Co-Author • Computational Catalysis",
+    "featured": true,
+    "doi": "10.1002/aenm.202404479",
+    "link": "https://doi.org/10.1002/aenm.202404479",
+    "highlight": "Elucidates metal-center intermediate adsorption thermodynamics and redox switching mechanisms enabling efficient AEM water electrolysis.",
+    "tags": [
+      "AEMWE",
+      "OER / HER",
+      "First-Principles DFT",
+      "High-Entropy Oxide"
+    ]
+  },
+  {
+    "title": "Molybdenum oxide/nickel molybdenum oxide heterostructures hybridized active platinum co-catalyst toward superb-efficiency water splitting catalysis",
+    "authors": [
+      "Thi Luu Luyen Doan",
+      "Dinh Chuong Nguyen",
+      "Nikhil Komalla",
+      "Nguyen V. Hieu",
+      "Lam Nguyen-Dinh",
+      "Nelson Y. Dzade",
+      "Cheol Sang Kim",
+      "Chan Hee Park"
+    ],
+    "journal": "Journal of Colloid and Interface Science",
+    "year": 2024,
+    "role": "Co-Author • DFT Modeling",
+    "featured": false,
+    "doi": "10.1016/j.jcis.2024.04.175",
+    "link": "https://doi.org/10.1016/j.jcis.2024.04.175",
+    "highlight": "Quantifies interfacial charge redistribution and hydrogen adsorption free energies across Pt-hybridized MoO2/NiMoO4 heterostructures.",
+    "tags": [
+      "Water Splitting",
+      "Heterostructures",
+      "DFT"
+    ]
+  },
+  {
+    "title": "Unraveling the origin of the high photocatalytic properties of earth-abundant TiO2/FeS2 heterojunctions: insights from first-principles density functional theory",
+    "authors": [
+      "Oluwayomi F. Awe",
+      "Henry I. Eya",
+      "Ricardo Amaral",
+      "Nikhil Komalla",
+      "Pascal Nbelayim",
+      "Nelson Y. Dzade"
+    ],
+    "journal": "Physical Chemistry Chemical Physics",
+    "year": 2024,
+    "role": "Co-Author • First-Principles DFT",
+    "featured": false,
+    "doi": "10.1039/d3cp04453j",
+    "link": "https://doi.org/10.1039/d3cp04453j",
+    "highlight": "Reveals band alignment, interfacial charge separation, and surface electronic structure driving enhanced photocatalytic efficiency in TiO2/FeS2.",
+    "tags": [
+      "Photocatalysis",
+      "Heterojunctions",
+      "Electronic Structure"
+    ]
+  },
+  {
+    "title": "Ruthenium Engineered A2B2O6-Hybrid Columbite Ferrite for Bifunctional pH-Universal Water Splitting",
+    "authors": [
+      "Patrick M. Bacirhonde",
+      "Ahmed Yousef Mohamed",
+      "Byounggun Han",
+      "Deok-Yong Cho",
+      "Shrestha Devendra",
+      "Jong-Won Choi",
+      "Che-Ryong Lim",
+      "Emmanuel O. Afranie",
+      "Kyeong-Ho Baik",
+      "Kyoungin Kang",
+      "Sunny Lee",
+      "Eun-Suk Jeong",
+      "Nikhil Komalla",
+      "Nelson Y. Dzade",
+      "Chan Hee Park",
+      "Cheol Sang Kim"
+    ],
+    "journal": "Advanced Energy Materials",
+    "year": 2023,
+    "role": "Co-Author • Electronic Structure & Catalysis",
+    "featured": true,
+    "doi": "10.1002/aenm.202300174",
+    "link": "https://doi.org/10.1002/aenm.202300174",
+    "highlight": "Demonstrates how Ru site engineering tailors d-band electronics and bifunctional HER/OER overpotentials across acidic and alkaline media.",
+    "tags": [
+      "pH-Universal",
+      "Bifunctional Catalysis",
+      "DFT"
+    ]
+  }
+]
