@@ -971,9 +971,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const ball = {
             state: reduceMotion ? "landed" : "idle",
-            u: -1.95,
+            u: -2.15,
             v: 0.08,
-            targetU: -1.95,
+            targetU: -2.15,
             targetV: 0.08,
             z: reduceMotion ? -0.82 : 2.8,
             vz: 0,
@@ -983,9 +983,9 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         const bump = {
-            u: 1.95,
+            u: 2.15,
             v: -0.06,
-            targetU: 1.95,
+            targetU: 2.15,
             targetV: -0.06,
             strength: reduceMotion ? 0.78 : 0.18,
             targetStrength: reduceMotion ? 0.78 : 0.18
@@ -1087,11 +1087,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const sy = height * 0.62 - z2 * scale * 0.92;
 
             // Keep center hero copy clear while maximizing flank/depth legibility
-            const cdx = (sx - width * 0.5) / (width * 0.30);
-            const cdy = (sy - height * 0.44) / (height * 0.28);
+            const cdx = (sx - width * 0.5) / (width * 0.35);
+            const cdy = (sy - height * 0.44) / (height * 0.32);
             const cDist = Math.hypot(cdx, cdy);
-            const tCenter = Math.min(1, Math.max(0, (cDist - 0.32) / 0.88));
-            const centerFade = 0.28 + 0.72 * (tCenter * tCenter * (3 - 2 * tCenter));
+            const tCenter = Math.min(1, Math.max(0, (cDist - 0.35) / 0.85));
+            const centerFade = 0.06 + 0.76 * (tCenter * tCenter * (3 - 2 * tCenter));
 
             const edgeU = Math.max(0, 1 - Math.pow(Math.abs(u) / 3.45, 3.2));
             const edgeV = Math.max(0, 1 - Math.pow(Math.abs(v) / 2.02, 3.0));
@@ -1487,7 +1487,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function mapCursorToSurface(mx, my) {
             return {
-                u: Math.max(-2.75, Math.min(2.75, (mx - width * 0.5) / (width * 0.145))),
+                u: Math.max(-2.95, Math.min(2.95, (mx - width * 0.5) / (width * 0.145))),
                 v: Math.max(-1.25, Math.min(1.25, -(my - height * 0.62) / (height * 0.22)))
             };
         }
@@ -1502,7 +1502,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (mx < width * 0.44) {
                 hoverZone = "left";
-                ball.targetU = Math.max(-2.70, Math.min(-0.95, mapped.u));
+                ball.targetU = Math.max(-2.95, Math.min(-1.55, mapped.u));
                 ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
                 if (ball.state === "idle" || ball.state === "lifting") {
                     ball.u = ball.targetU;
@@ -1514,7 +1514,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 bump.targetStrength = 0.88;
             } else if (mx > width * 0.56) {
                 hoverZone = "right";
-                bump.targetU = Math.max(0.95, Math.min(2.70, mapped.u));
+                bump.targetU = Math.max(1.55, Math.min(2.95, mapped.u));
                 bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
                 bump.targetStrength = 1.28;
                 if (ball.state === "landed" || ball.state === "dropping") {
@@ -1546,7 +1546,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const my = e.clientY - rect.top;
             const mapped = mapCursorToSurface(mx, my);
             if (mx < width * 0.46) {
-                ball.targetU = Math.max(-2.70, Math.min(-0.95, mapped.u));
+                ball.targetU = Math.max(-2.95, Math.min(-1.55, mapped.u));
                 ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
                 ball.u = ball.targetU;
                 ball.v = ball.targetV;
@@ -1554,7 +1554,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ball.vz = -0.7;
                 ball.state = "dropping";
             } else if (mx > width * 0.54) {
-                bump.targetU = Math.max(0.95, Math.min(2.70, mapped.u));
+                bump.targetU = Math.max(1.55, Math.min(2.95, mapped.u));
                 bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
                 bump.u = bump.targetU;
                 bump.v = bump.targetV;

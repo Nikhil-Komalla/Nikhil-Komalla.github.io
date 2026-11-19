@@ -49,7 +49,7 @@
           "items": "Python, C++, MATLAB, R, ASE, pymatgen, MongoDB, HPC (SLURM Multi-GPU), Linux, Git, COMSOL, ANSYS CFD, Aspen / Pro-II"
         }
       ],
-      "experienceOrder": ["psu_fns", "psu_sno", "psu_review", "iict", "osmania", "krest", "psu_gta", "iith"],
+      "experienceOrder": ["psu_fns", "psu_sno", "iict", "osmania", "krest", "psu_gta", "iith"],
       "featuredPubIndices": [0, 1, 4]
     },
     "materials": {
@@ -71,7 +71,7 @@
           "items": "Python, C++, MATLAB, R, ASE, pymatgen, MongoDB, HPC (SLURM Multi-GPU), Linux, Git, COMSOL, ANSYS CFD, Aspen / Pro-II"
         }
       ],
-      "experienceOrder": ["psu_sno", "psu_fns", "psu_review", "iict", "iith", "krest", "osmania", "psu_gta"],
+      "experienceOrder": ["psu_sno", "psu_fns", "iict", "iith", "krest", "osmania", "psu_gta"],
       "featuredPubIndices": [0, 3, 1]
     },
     "electrochemistry": {
@@ -93,7 +93,7 @@
           "items": "Python, C++, MATLAB, R, ASE, pymatgen, MongoDB, HPC (SLURM Multi-GPU), Linux, Git, AEMWE / Fuel Cells, COMSOL, ANSYS CFD, Aspen / Pro-II"
         }
       ],
-      "experienceOrder": ["psu_fns", "psu_sno", "osmania", "krest", "psu_review", "iict", "psu_gta", "iith"],
+      "experienceOrder": ["psu_fns", "psu_sno", "osmania", "krest", "iict", "psu_gta", "iith"],
       "featuredPubIndices": [0, 1, 2]
     },
     "modeling": {
@@ -115,7 +115,7 @@
           "items": "Python, C++, MATLAB, R, ASE, pymatgen, MongoDB, HPC (SLURM Multi-GPU), Linux, Git"
         }
       ],
-      "experienceOrder": ["psu_fns", "psu_sno", "iith", "iict", "krest", "osmania", "psu_review", "psu_gta"],
+      "experienceOrder": ["psu_fns", "psu_sno", "iith", "iict", "krest", "osmania", "psu_gta"],
       "featuredPubIndices": [0, 1, 3]
     },
     "ai_science": {
@@ -137,7 +137,7 @@
           "items": "Python, C++, MATLAB, R, ASE, pymatgen, LMDB, MongoDB, HPC (SLURM Multi-GPU), Linux, Git, FastAPI, COMSOL, ANSYS CFD"
         }
       ],
-      "experienceOrder": ["psu_fns", "psu_sno", "iict", "psu_review", "krest", "osmania", "iith", "psu_gta"],
+      "experienceOrder": ["psu_fns", "psu_sno", "iict", "krest", "osmania", "iith", "psu_gta"],
       "featuredPubIndices": [0, 1, 3]
     }
   },
@@ -162,16 +162,6 @@
       "bullets": [
         "Screen-doped oxide photocatalysts across 100+ active site combinations, mapping 11 reaction mechanisms and transition state structures via DFT.",
         "Built active-learning MLIP screening and MD pipelines integrating Matbench/CatBench-aligned validation and automated VASP verification."
-      ]
-    },
-    {
-      "id": "psu_review",
-      "title": "Lead Author -- Rational Electrocatalyst Design Review (Small, 2026)",
-      "organization": "The Pennsylvania State University (Materials & Minerals Theory Group)",
-      "location": "University Park, PA",
-      "period": "2024 -- 2026",
-      "bullets": [
-        "Synthesized synergistic DFT, MLIP, and experimental design rules for durable green hydrogen water electrolysis catalysts (Small, DOI: 10.1002/smll.202511010)."
       ]
     },
     {
