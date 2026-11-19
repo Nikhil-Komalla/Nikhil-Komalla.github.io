@@ -928,7 +928,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const yearSpan = document.getElementById("current-year");
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // --- Hero Edge-Only Crystal Defect (Left) & Substitutional Doping (Right) Canvas ---
+    // --- Hero 3Blue1Brown-Style 3D Wavefunction, Saddle Point & Troughs Canvas ---
     function initHeroLatticeCanvas() {
         const heroEl = document.getElementById("hero");
         const canvas = document.getElementById("hero-lattice-canvas");
@@ -938,14 +938,33 @@ document.addEventListener("DOMContentLoaded", function () {
         const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         let width = 0;
         let height = 0;
-        let spacing = 36;
-        let atoms = [];
-        let bonds = [];
-        let pointer = { active: false, x: -9999, y: -9999, side: null };
         let heroVisible = true;
         let rafId = null;
 
-        function buildLattice() {
+        const NX = 44;
+        const NY = 26;
+        const U_MIN = -2.8;
+        const U_MAX = 2.8;
+        const V_MIN = -1.75;
+        const V_MAX = 1.75;
+
+        let targetCamX = 0;
+        let targetCamY = 0;
+        let camX = 0;
+        let camY = 0;
+        let pointerActive = false;
+        let targetU = 0;
+        let targetV = 0;
+        let pointerU = 0;
+        let pointerV = 0;
+        let pointerStrength = 0;
+
+        // Preallocated projected vertex grid for zero-GC 60 FPS animation
+        const grid = Array.from({ length: NY + 1 }, () =>
+            Array.from({ length: NX + 1 }, () => ({ sx: 0, sy: 0, z: 0, alphaMask: 1 }))
+        );
+
+        function resizeCanvas() {
             const rect = heroEl.getBoundingClientRect();
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             width = Math.max(320, rect.width);
@@ -953,217 +972,213 @@ document.addEventListener("DOMContentLoaded", function () {
             canvas.width = Math.floor(width * dpr);
             canvas.height = Math.floor(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            spacing = width < 768 ? 32 : 38;
-            const rowH = spacing * 0.866;
-            const leftCut = width * 0.31;
-            const rightCut = width * 0.69;
-
-            atoms = [];
-            const rows = Math.ceil(height / rowH) + 2;
-            const cols = Math.ceil(width / spacing) + 2;
-            for (let r = 0; r < rows; r++) {
-                const offsetX = (r % 2 === 0) ? 0 : spacing * 0.5;
-                const y0 = (r - 0.5) * rowH;
-                for (let c = 0; c < cols; c++) {
-                    const x0 = (c - 0.5) * spacing + offsetX;
-                    let side = null;
-                    let edgeAlpha = 0;
-                    if (x0 <= leftCut) {
-                        side = "left";
-                        edgeAlpha = Math.max(0, 1 - x0 / leftCut);
-                    } else if (x0 >= rightCut) {
-                        side = "right";
-                        edgeAlpha = Math.max(0, (x0 - rightCut) / (width - rightCut));
-                    }
-                    if (!side || edgeAlpha < 0.06) continue;
-                    // Deterministic disorder seed per site for reproducible amorphous perturbation
-                    const hash = Math.abs(Math.sin(x0 * 0.137 + y0 * 0.293));
-                    const theta = hash * Math.PI * 2;
-                    atoms.push({
-                        x0, y0,
-                        x: x0, y: y0,
-                        side,
-                        edgeAlpha: Math.min(1, Math.pow(edgeAlpha, 0.72) * 0.92),
-                        theta,
-                        mag: 0.45 + 0.55 * hash,
-                        phase: hash * Math.PI * 2,
-                        vacancy: 0,
-                        dopant: 0
-                    });
-                }
-            }
-
-            bonds = [];
-            const maxBond2 = (spacing * 1.18) * (spacing * 1.18);
-            for (let i = 0; i < atoms.length; i++) {
-                for (let j = i + 1; j < atoms.length; j++) {
-                    if (atoms[i].side !== atoms[j].side) continue;
-                    const dx = atoms[i].x0 - atoms[j].x0;
-                    const dy = atoms[i].y0 - atoms[j].y0;
-                    if (dx * dx + dy * dy <= maxBond2) {
-                        bonds.push([i, j]);
-                    }
-                }
-            }
         }
 
-        function updateAtoms(t) {
-            const radius = 148;
-            let nearestLeftIdx = -1;
-            let nearestLeftD2 = Infinity;
-            let nearestRightIdx = -1;
-            let nearestRightD2 = Infinity;
-
-            if (pointer.active && pointer.side === "left") {
-                for (let i = 0; i < atoms.length; i++) {
-                    if (atoms[i].side !== "left") continue;
-                    const dx = atoms[i].x0 - pointer.x;
-                    const dy = atoms[i].y0 - pointer.y;
-                    const d2 = dx * dx + dy * dy;
-                    if (d2 < nearestLeftD2) {
-                        nearestLeftD2 = d2;
-                        nearestLeftIdx = i;
-                    }
-                }
-            } else if (pointer.active && pointer.side === "right") {
-                for (let i = 0; i < atoms.length; i++) {
-                    if (atoms[i].side !== "right") continue;
-                    const dx = atoms[i].x0 - pointer.x;
-                    const dy = atoms[i].y0 - pointer.y;
-                    const d2 = dx * dx + dy * dy;
-                    if (d2 < nearestRightD2) {
-                        nearestRightD2 = d2;
-                        nearestRightIdx = i;
-                    }
-                }
+        function evalSurface(u, v, t) {
+            const trough1 = -1.25 * Math.exp(-(((u + 1.45) * (u + 1.45)) / 0.72 + ((v - 0.28) * (v - 0.28)) / 0.62));
+            const trough2 = -1.15 * Math.exp(-(((u - 1.45) * (u - 1.45)) / 0.72 + ((v + 0.28) * (v + 0.28)) / 0.62));
+            const ridge1 = 1.05 * Math.exp(-(((u - 0.08) * (u - 0.08)) / 0.95 + ((v - 1.12) * (v - 1.12)) / 0.42));
+            const ridge2 = 1.05 * Math.exp(-(((u + 0.08) * (u + 0.08)) / 0.95 + ((v + 1.12) * (v + 1.12)) / 0.42));
+            const saddleBridge = 0.26 * Math.exp(-((u * u) / 0.55 + (v * v) / 0.90));
+            const psi = 0.14 * Math.cos(2.3 * u - 1.1 * v - t * 1.1) * Math.exp(-(u * u * 0.14 + v * v * 0.22));
+            let hoverWave = 0;
+            if (pointerStrength > 0.01) {
+                const du = u - pointerU;
+                const dv = v - pointerV;
+                const dM = Math.hypot(du, dv);
+                hoverWave = pointerStrength * 0.42 * Math.cos(3.4 * dM - t * 4.0) * Math.exp(-(dM * dM) / 0.55);
             }
-
-            const ease = reduceMotion ? 1 : 0.14;
-            for (let i = 0; i < atoms.length; i++) {
-                const a = atoms[i];
-                const breath = reduceMotion ? 0 : Math.sin(t * 0.0014 + a.phase) * 0.9;
-                let tx = a.x0 + Math.cos(a.phase) * breath;
-                let ty = a.y0 + Math.sin(a.phase) * breath;
-                let tVacancy = 0;
-                let tDopant = 0;
-
-                if (pointer.active && pointer.side === "left" && a.side === "left") {
-                    const dx = a.x0 - pointer.x;
-                    const dy = a.y0 - pointer.y;
-                    const d = Math.hypot(dx, dy);
-                    if (d < radius) {
-                        const w = 1 - d / radius;
-                        if (i === nearestLeftIdx) {
-                            tVacancy = 1;
-                        } else {
-                            // Local amorphous distortion around cursor / vacancy defect
-                            const amp = w * w * 18 * a.mag;
-                            tx += Math.cos(a.theta + Math.sin(t * 0.002 + i) * 0.25) * amp;
-                            ty += Math.sin(a.theta + Math.cos(t * 0.002 + i) * 0.25) * amp;
-                        }
-                    }
-                } else if (pointer.active && pointer.side === "right" && a.side === "right") {
-                    const dx = a.x0 - pointer.x;
-                    const dy = a.y0 - pointer.y;
-                    const d = Math.hypot(dx, dy);
-                    if (d < radius) {
-                        if (i === nearestRightIdx) {
-                            tDopant = 1;
-                        } else {
-                            // Radial substitutional lattice strain around dopant atom
-                            const safeD = Math.max(d, 12);
-                            const strain = (1 - d / radius) * 11;
-                            tx += (dx / safeD) * strain;
-                            ty += (dy / safeD) * strain;
-                        }
-                    }
-                }
-
-                a.x += (tx - a.x) * ease;
-                a.y += (ty - a.y) * ease;
-                a.vacancy += (tVacancy - a.vacancy) * ease;
-                a.dopant += (tDopant - a.dopant) * ease;
-            }
+            return trough1 + trough2 + ridge1 + ridge2 + saddleBridge + psi + hoverWave;
         }
 
-        function drawFrame() {
+        function projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch) {
+            const x1 = u * cosYaw - v * sinYaw;
+            const y1 = u * sinYaw + v * cosYaw;
+            const y2 = y1 * cosPitch - z * sinPitch;
+            const z2 = y1 * sinPitch + z * cosPitch;
+            const fov = 6.2;
+            const persp = fov / (fov + y2 + 5.2);
+            const scale = Math.min(width * 0.24, height * 0.44) * persp;
+            const sx = width * 0.5 + x1 * scale * 1.25;
+            const sy = height * 0.56 - z2 * scale * 0.92;
+            const cdx = (sx - width * 0.5) / (width * 0.34);
+            const cdy = (sy - height * 0.48) / (height * 0.32);
+            const cDist = Math.hypot(cdx, cdy);
+            const tMask = Math.min(1, Math.max(0, (cDist - 0.35) / 0.85));
+            const alphaMask = 0.26 + 0.64 * (tMask * tMask * (3 - 2 * tMask));
+            return { sx, sy, alphaMask };
+        }
+
+        function manimColor(z, u, v, alpha) {
+            const saddleProx = Math.exp(-((u * u) / 0.38 + (v * v) / 0.38));
+            let r, g, b;
+            if (z < -0.25) {
+                // Deep troughs: Manim cyan-teal (#22d3ee -> #38bdf8)
+                const k = Math.min(1, Math.max(0, (-0.25 - z) / 0.95));
+                r = 56 - 22 * k;
+                g = 189 + 22 * k;
+                b = 248 - 10 * k;
+            } else if (z <= 0.30) {
+                // Mid / saddle transition zone: ice-blue warming toward gold near saddle
+                const k = (z + 0.25) / 0.55;
+                r = 96 + 33 * k;
+                g = 165 - 25 * k;
+                b = 250 - 2 * k;
+            } else {
+                // High energy ridges: indigo-violet (#818cf8 -> #c084fc)
+                const k = Math.min(1, (z - 0.30) / 0.85);
+                r = 129 + 63 * k;
+                g = 140 - 8 * k;
+                b = 248 + 4 * k;
+            }
+            if (saddleProx > 0.15) {
+                const s = saddleProx * 0.55;
+                r = r + (251 - r) * s;
+                g = g + (191 - g) * s;
+                b = b + (36 - b) * s;
+            }
+            return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha.toFixed(3)})`;
+        }
+
+        function drawFrame(nowMs) {
+            const t = nowMs * 0.001;
+            const easeCam = reduceMotion ? 1 : 0.08;
+            const easePtr = reduceMotion ? 1 : 0.10;
+            camX += (targetCamX - camX) * easeCam;
+            camY += (targetCamY - camY) * easeCam;
+            pointerU += (targetU - pointerU) * easePtr;
+            pointerV += (targetV - pointerV) * easePtr;
+            pointerStrength += ((pointerActive ? 1 : 0) - pointerStrength) * easePtr;
+
+            const yaw = -0.32 + camX * 0.11;
+            const pitch = 0.66 + camY * 0.07;
+            const cosYaw = Math.cos(yaw);
+            const sinYaw = Math.sin(yaw);
+            const cosPitch = Math.cos(pitch);
+            const sinPitch = Math.sin(pitch);
+
+            for (let j = 0; j <= NY; j++) {
+                const v = V_MIN + (j / NY) * (V_MAX - V_MIN);
+                for (let i = 0; i <= NX; i++) {
+                    const u = U_MIN + (i / NX) * (U_MAX - U_MIN);
+                    const z = evalSurface(u, v, t);
+                    const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
+                    const cell = grid[j][i];
+                    cell.sx = p.sx;
+                    cell.sy = p.sy;
+                    cell.z = z;
+                    cell.u = u;
+                    cell.v = v;
+                    cell.alphaMask = p.alphaMask;
+                }
+            }
+
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Draw bonds (break/dim stretched bonds; tint doped or amorphous neighbors)
-            for (let b = 0; b < bonds.length; b++) {
-                const a = atoms[bonds[b][0]];
-                const c = atoms[bonds[b][1]];
-                if (a.vacancy > 0.65 || c.vacancy > 0.65) continue;
-
-                const dist = Math.hypot(a.x - c.x, a.y - c.y);
-                const ratio = dist / spacing;
-                if (ratio > 1.38) continue;
-
-                const baseAlpha = Math.min(a.edgeAlpha, c.edgeAlpha) * 0.34;
-                const strainFade = ratio > 1.1 ? Math.max(0.15, 1 - (ratio - 1.1) / 0.3) : 1;
-                const dopBond = Math.max(a.dopant, c.dopant);
-                const disp = (Math.hypot(a.x - a.x0, a.y - a.y0) + Math.hypot(c.x - c.x0, c.y - c.y0)) / 24;
-
-                if (dopBond > 0.15) {
-                    ctx.strokeStyle = `rgba(251, 191, 36, ${Math.min(0.75, (baseAlpha + 0.32 * dopBond) * strainFade)})`;
-                    ctx.lineWidth = 1.6;
-                } else if (a.side === "left" && disp > 0.25) {
-                    ctx.strokeStyle = `rgba(165, 180, 252, ${Math.min(0.6, baseAlpha * 1.45 * strainFade)})`;
-                    ctx.lineWidth = 1.15;
-                } else {
-                    ctx.strokeStyle = `rgba(147, 197, 253, ${baseAlpha * strainFade})`;
-                    ctx.lineWidth = 1.05;
+            // 1. Wireframe mesh lines (connecting along u and v grid directions)
+            ctx.lineWidth = 1.05;
+            for (let j = 0; j <= NY; j++) {
+                for (let i = 0; i < NX; i++) {
+                    const a = grid[j][i];
+                    const b = grid[j][i + 1];
+                    const zm = 0.5 * (a.z + b.z);
+                    const um = 0.5 * (a.u + b.u);
+                    const vm = 0.5 * (a.v + b.v);
+                    const alpha = Math.min(0.62, 0.5 * (a.alphaMask + b.alphaMask) * 0.58);
+                    ctx.strokeStyle = manimColor(zm, um, vm, alpha);
+                    ctx.beginPath();
+                    ctx.moveTo(a.sx, a.sy);
+                    ctx.lineTo(b.sx, b.sy);
+                    ctx.stroke();
                 }
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(c.x, c.y);
-                ctx.stroke();
+            }
+            for (let i = 0; i <= NX; i += 2) {
+                for (let j = 0; j < NY; j++) {
+                    const a = grid[j][i];
+                    const b = grid[j + 1][i];
+                    const zm = 0.5 * (a.z + b.z);
+                    const um = 0.5 * (a.u + b.u);
+                    const vm = 0.5 * (a.v + b.v);
+                    const alpha = Math.min(0.46, 0.5 * (a.alphaMask + b.alphaMask) * 0.44);
+                    ctx.strokeStyle = manimColor(zm, um, vm, alpha);
+                    ctx.beginPath();
+                    ctx.moveTo(a.sx, a.sy);
+                    ctx.lineTo(b.sx, b.sy);
+                    ctx.stroke();
+                }
             }
 
-            // 2. Draw lattice atoms, dashed vacancies (left), and golden dopants (right)
-            for (let i = 0; i < atoms.length; i++) {
-                const a = atoms[i];
-                if (a.vacancy > 0.2) {
-                    ctx.save();
-                    ctx.setLineDash([2.5, 2.5]);
-                    ctx.strokeStyle = `rgba(248, 250, 252, ${a.edgeAlpha * 0.72 * a.vacancy})`;
-                    ctx.lineWidth = 1.3;
+            // 2. Nodal connecting dots at grid vertices
+            for (let j = 0; j <= NY; j++) {
+                for (let i = 0; i <= NX; i++) {
+                    if ((i + j) % 2 !== 0 && i !== 0 && i !== NX) continue;
+                    const a = grid[j][i];
+                    const alpha = a.alphaMask * 0.72;
+                    const r = 1.35 + Math.min(0.85, Math.abs(a.z) * 0.65);
+                    ctx.fillStyle = manimColor(a.z, a.u, a.v, alpha);
                     ctx.beginPath();
-                    ctx.arc(a.x0, a.y0, 5.4, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.restore();
-                }
-
-                if (a.dopant > 0.15) {
-                    const grad = ctx.createRadialGradient(a.x, a.y, 1, a.x, a.y, 16);
-                    grad.addColorStop(0, `rgba(251, 191, 36, ${0.42 * a.dopant})`);
-                    grad.addColorStop(1, "rgba(251, 191, 36, 0)");
-                    ctx.fillStyle = grad;
-                    ctx.beginPath();
-                    ctx.arc(a.x, a.y, 16, 0, Math.PI * 2);
+                    ctx.arc(a.sx, a.sy, r, 0, Math.PI * 2);
                     ctx.fill();
-
-                    ctx.fillStyle = `rgba(251, 191, 36, ${Math.min(0.95, a.edgeAlpha + 0.3)})`;
-                    ctx.beginPath();
-                    ctx.arc(a.x, a.y, 3.8 + 2.2 * a.dopant, 0, Math.PI * 2);
-                    ctx.fill();
-                    continue;
                 }
+            }
 
-                const hostAlpha = a.edgeAlpha * 0.62 * (1 - a.vacancy * 0.9);
-                if (hostAlpha <= 0.03) continue;
-                ctx.fillStyle = `rgba(219, 234, 254, ${hostAlpha})`;
+            // 3. Minimum Energy Path (MEP) connecting Left Trough -> Saddle Point -> Right Trough
+            const MEP_STEPS = 48;
+            ctx.save();
+            ctx.lineWidth = 2.3;
+            ctx.strokeStyle = "rgba(251, 191, 36, 0.68)";
+            ctx.beginPath();
+            for (let s = 0; s <= MEP_STEPS; s++) {
+                const u = -1.45 + (s / MEP_STEPS) * 2.90;
+                const v = -0.28 * Math.sin((u / 1.45) * (Math.PI / 2));
+                const z = evalSurface(u, v, t) + 0.045;
+                const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
+                if (s === 0) ctx.moveTo(p.sx, p.sy);
+                else ctx.lineTo(p.sx, p.sy);
+            }
+            ctx.stroke();
+            ctx.restore();
+
+            // 4. Trough halos (cyan) + Saddle Point halo (gold) + animated wavepacket beads
+            const landmarks = [
+                { u: -1.45, v: 0.28, color: "34, 211, 238", rad: 16 },
+                { u: 0.0, v: 0.0, color: "251, 191, 36", rad: 18 },
+                { u: 1.45, v: -0.28, color: "34, 211, 238", rad: 16 }
+            ];
+            landmarks.forEach(lm => {
+                const z = evalSurface(lm.u, lm.v, t) + 0.045;
+                const p = projectPoint(lm.u, lm.v, z, cosYaw, sinYaw, cosPitch, sinPitch);
+                const g = ctx.createRadialGradient(p.sx, p.sy, 1, p.sx, p.sy, lm.rad);
+                g.addColorStop(0, `rgba(${lm.color}, 0.72)`);
+                g.addColorStop(1, `rgba(${lm.color}, 0)`);
+                ctx.fillStyle = g;
                 ctx.beginPath();
-                ctx.arc(a.x, a.y, 2.65, 0, Math.PI * 2);
+                ctx.arc(p.sx, p.sy, lm.rad, 0, Math.PI * 2);
                 ctx.fill();
+            });
+
+            if (!reduceMotion) {
+                for (let b = 0; b < 2; b++) {
+                    const phase = ((t * 0.22 + b * 0.5) % 1);
+                    const u = -1.45 + phase * 2.90;
+                    const v = -0.28 * Math.sin((u / 1.45) * (Math.PI / 2));
+                    const z = evalSurface(u, v, t) + 0.06;
+                    const p = projectPoint(u, v, z, cosYaw, sinYaw, cosPitch, sinPitch);
+                    const glow = ctx.createRadialGradient(p.sx, p.sy, 0.5, p.sx, p.sy, 11);
+                    glow.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+                    glow.addColorStop(0.4, "rgba(251, 191, 36, 0.65)");
+                    glow.addColorStop(1, "rgba(251, 191, 36, 0)");
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(p.sx, p.sy, 11, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
         }
 
         function tick(now) {
             if (!heroVisible || reduceMotion) return;
-            updateAtoms(now);
-            drawFrame();
+            drawFrame(now);
             rafId = window.requestAnimationFrame(tick);
         }
 
@@ -1171,27 +1186,22 @@ document.addEventListener("DOMContentLoaded", function () {
             const rect = heroEl.getBoundingClientRect();
             const mx = e.clientX - rect.left;
             const my = e.clientY - rect.top;
-            if (mx < width * 0.30) {
-                pointer = { active: true, x: mx, y: my, side: "left" };
-            } else if (mx > width * 0.70) {
-                pointer = { active: true, x: mx, y: my, side: "right" };
-            } else {
-                pointer.active = false;
-                pointer.side = null;
-            }
+            targetCamX = Math.max(-1, Math.min(1, (mx / width - 0.5) * 2));
+            targetCamY = Math.max(-1, Math.min(1, (my / height - 0.5) * 2));
+            targetU = Math.max(-2.6, Math.min(2.6, (mx - width * 0.5) / (width * 0.17)));
+            targetV = Math.max(-1.6, Math.min(1.6, -(my - height * 0.56) / (height * 0.26)));
+            pointerActive = true;
         });
 
         heroEl.addEventListener("mouseleave", () => {
-            pointer.active = false;
-            pointer.side = null;
+            pointerActive = false;
+            targetCamX = 0;
+            targetCamY = 0;
         });
 
         window.addEventListener("resize", () => {
-            buildLattice();
-            if (reduceMotion) {
-                updateAtoms(0);
-                drawFrame();
-            }
+            resizeCanvas();
+            if (reduceMotion) drawFrame(0);
         });
 
         if ("IntersectionObserver" in window) {
@@ -1207,9 +1217,8 @@ document.addEventListener("DOMContentLoaded", function () {
             heroObs.observe(heroEl);
         }
 
-        buildLattice();
-        updateAtoms(0);
-        drawFrame();
+        resizeCanvas();
+        drawFrame(0);
         if (!reduceMotion) {
             rafId = window.requestAnimationFrame(tick);
         }
