@@ -970,16 +970,16 @@ document.addEventListener("DOMContentLoaded", function () {
         let hoverZone = "center";
 
         const ball = {
-            state: reduceMotion ? "landed" : "idle",
+            state: "idle",
             u: -2.15,
             v: 0.08,
             targetU: -2.15,
             targetV: 0.08,
-            z: reduceMotion ? -0.82 : 2.8,
+            z: 2.8,
             vz: 0,
             radius3D: 0.56,
-            wellDepth: reduceMotion ? 1.0 : 0,
-            opacity: reduceMotion ? 1.0 : 0
+            wellDepth: 0,
+            opacity: 0
         };
 
         const bump = {
@@ -987,8 +987,8 @@ document.addEventListener("DOMContentLoaded", function () {
             v: -0.06,
             targetU: 2.15,
             targetV: -0.06,
-            strength: reduceMotion ? 0.78 : 0.18,
-            targetStrength: reduceMotion ? 0.78 : 0.18
+            strength: 0.18,
+            targetStrength: 0.18
         };
 
         function resizeCanvas() {
@@ -1048,7 +1048,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function evalStaticFeatures(u, v, t) {
-            const ambientWave = 0.06 * Math.cos(1.8 * u - 0.9 * v - t * 1.0) * Math.exp(-(u * u * 0.08 + v * v * 0.14));
+            const ambientAmp = reduceMotion ? 0.015 : 0.06;
+            const ambientWave = ambientAmp * Math.cos(1.8 * u - 0.9 * v - t * 1.0) * Math.exp(-(u * u * 0.08 + v * v * 0.14));
             const dbU = u - ball.u;
             const dbV = v - ball.v;
             const leftWell = -1.45 * ball.wellDepth * Math.exp(-((dbU * dbU + dbV * dbV) / 0.56));
@@ -1082,9 +1083,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const z2 = y1 * sinPitch + z * cosPitch;
             const fov = 6.8;
             const persp = fov / (fov + y2 + 5.6);
-            const scale = Math.min(width * 0.25, height * 0.45) * persp;
-            const sx = width * 0.5 + x1 * scale * 1.18;
-            const sy = height * 0.62 - z2 * scale * 0.92;
+            const baseScale = Math.min(width / 3.9, height / 2.25);
+            const scale = baseScale * persp;
+            const sx = width * 0.5 + x1 * scale * 1.16;
+            const sy = height * 0.58 - z2 * scale * 0.88;
 
             // Keep center hero copy clear while maximizing flank/depth legibility
             const cdx = (sx - width * 0.5) / (width * 0.35);
@@ -1398,10 +1400,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const dt = lastTimeMs > 0 ? Math.min(0.033, Math.max(0.001, (nowMs - lastTimeMs) * 0.001)) : 0.016;
             lastTimeMs = nowMs;
 
-            if (!reduceMotion) {
-                stepWavePDE();
-                updatePhysics(dt, t);
-            }
+            stepWavePDE();
+            updatePhysics(dt, t);
 
             const yaw = -0.10 + camX * 0.07;
             const pitch = 0.48 + camY * 0.05;
@@ -1480,30 +1480,66 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function tick(now) {
-            if (!heroVisible || reduceMotion) return;
+            if (!heroVisible) {
+                rafId = null;
+                return;
+            }
             drawFrame(now);
             rafId = window.requestAnimationFrame(tick);
         }
 
-        function mapCursorToSurface(mx, my) {
-            return {
-                u: Math.max(-2.95, Math.min(2.95, (mx - width * 0.5) / (width * 0.145))),
-                v: Math.max(-1.25, Math.min(1.25, -(my - height * 0.62) / (height * 0.22)))
-            };
+        function ensureAnimationRunning() {
+            heroVisible = true;
+            if (!rafId) {
+                lastTimeMs = 0;
+                rafId = window.requestAnimationFrame(tick);
+            }
         }
 
-        heroEl.addEventListener("mousemove", e => {
+        function screenToSurfaceUV(mx, my) {
+            const persp0 = 6.8 / (6.8 + 5.6);
+            const s0 = Math.max(40, Math.min(width / 3.9, height / 2.25) * persp0);
+            const u = Math.max(-2.85, Math.min(2.85, (mx - width * 0.5) / (s0 * 1.16)));
+            const v = Math.max(-1.25, Math.min(1.25, -(my - height * 0.58) / (s0 * 0.88 * Math.sin(0.48))));
+            return { u, v };
+        }
+
+        function resetToNeutral() {
+            if (hoverZone !== "center") {
+                hoverZone = "center";
+            }
+            targetCamX = 0;
+            targetCamY = 0;
+            bump.targetStrength = 0.16;
+            if (ball.state === "landed" || ball.state === "dropping") {
+                ball.state = "lifting";
+            }
+        }
+
+        let lastPointerEvtMs = 0;
+
+        function handlePointerMove(clientX, clientY) {
             const rect = heroEl.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
+            if (rect.width <= 0 || rect.height <= 0) return;
+            width = Math.max(320, rect.width);
+            height = Math.max(420, rect.height);
+
+            if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
+                if (hoverZone !== "center") resetToNeutral();
+                return;
+            }
+
+            ensureAnimationRunning();
+            const mx = clientX - rect.left;
+            const my = clientY - rect.top;
             targetCamX = Math.max(-1, Math.min(1, (mx / width - 0.5) * 2));
             targetCamY = Math.max(-1, Math.min(1, (my / height - 0.5) * 2));
-            const mapped = mapCursorToSurface(mx, my);
+            const mapped = screenToSurfaceUV(mx, my);
 
-            if (mx < width * 0.44) {
+            if (mx < width * 0.47) {
                 hoverZone = "left";
-                ball.targetU = Math.max(-2.95, Math.min(-1.55, mapped.u));
-                ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                ball.targetU = Math.max(-2.85, Math.min(-0.88, mapped.u));
+                ball.targetV = Math.max(-1.15, Math.min(1.15, mapped.v));
                 if (ball.state === "idle" || ball.state === "lifting") {
                     ball.u = ball.targetU;
                     ball.v = ball.targetV;
@@ -1512,10 +1548,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     ball.state = "dropping";
                 }
                 bump.targetStrength = 0.88;
-            } else if (mx > width * 0.56) {
+            } else if (mx > width * 0.53) {
                 hoverZone = "right";
-                bump.targetU = Math.max(1.55, Math.min(2.95, mapped.u));
-                bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+                bump.targetU = Math.max(0.88, Math.min(2.85, mapped.u));
+                bump.targetV = Math.max(-1.15, Math.min(1.15, mapped.v));
                 bump.targetStrength = 1.28;
                 if (ball.state === "landed" || ball.state === "dropping") {
                     ball.state = "lifting";
@@ -1527,35 +1563,51 @@ document.addEventListener("DOMContentLoaded", function () {
                     ball.state = "lifting";
                 }
             }
-        });
+        }
 
-        heroEl.addEventListener("mouseleave", () => {
-            hoverZone = "center";
-            targetCamX = 0;
-            targetCamY = 0;
-            bump.targetStrength = 0.16;
-            if (ball.state === "landed" || ball.state === "dropping") {
-                ball.state = "lifting";
+        window.addEventListener("pointermove", e => {
+            lastPointerEvtMs = performance.now();
+            handlePointerMove(e.clientX, e.clientY);
+        }, { passive: true });
+
+        window.addEventListener("mousemove", e => {
+            if (performance.now() - lastPointerEvtMs < 10) return;
+            handlePointerMove(e.clientX, e.clientY);
+        }, { passive: true });
+
+        heroEl.addEventListener("touchstart", e => {
+            if (e.touches && e.touches[0]) {
+                handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
             }
-        });
+        }, { passive: true });
+
+        heroEl.addEventListener("touchmove", e => {
+            if (e.touches && e.touches[0]) {
+                handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        document.addEventListener("mouseleave", resetToNeutral);
+        heroEl.addEventListener("mouseleave", resetToNeutral);
 
         heroEl.addEventListener("click", e => {
             if (e.target && e.target.closest("a, button")) return;
             const rect = heroEl.getBoundingClientRect();
             const mx = e.clientX - rect.left;
             const my = e.clientY - rect.top;
-            const mapped = mapCursorToSurface(mx, my);
-            if (mx < width * 0.46) {
-                ball.targetU = Math.max(-2.95, Math.min(-1.55, mapped.u));
-                ball.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+            const mapped = screenToSurfaceUV(mx, my);
+            ensureAnimationRunning();
+            if (mx < width * 0.48) {
+                ball.targetU = Math.max(-2.85, Math.min(-0.88, mapped.u));
+                ball.targetV = Math.max(-1.15, Math.min(1.15, mapped.v));
                 ball.u = ball.targetU;
                 ball.v = ball.targetV;
                 ball.z = 2.75;
                 ball.vz = -0.7;
                 ball.state = "dropping";
-            } else if (mx > width * 0.54) {
-                bump.targetU = Math.max(1.55, Math.min(2.95, mapped.u));
-                bump.targetV = Math.max(-1.10, Math.min(1.05, mapped.v));
+            } else if (mx > width * 0.52) {
+                bump.targetU = Math.max(0.88, Math.min(2.85, mapped.u));
+                bump.targetV = Math.max(-1.15, Math.min(1.15, mapped.v));
                 bump.u = bump.targetU;
                 bump.v = bump.targetV;
                 bump.targetStrength = 1.32;
@@ -1563,15 +1615,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        window.addEventListener("resize", () => {
-            resizeCanvas();
-            if (reduceMotion) drawFrame(0);
-        });
+        window.addEventListener("resize", resizeCanvas);
+        window.addEventListener("orientationchange", resizeCanvas);
 
         if ("IntersectionObserver" in window) {
             const heroObs = new IntersectionObserver(entries => {
                 heroVisible = entries[0].isIntersecting;
-                if (heroVisible && !reduceMotion && !rafId) {
+                if (heroVisible && !rafId) {
                     lastTimeMs = 0;
                     rafId = window.requestAnimationFrame(tick);
                 } else if (!heroVisible && rafId) {
@@ -1584,9 +1634,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         resizeCanvas();
         drawFrame(0);
-        if (!reduceMotion) {
-            rafId = window.requestAnimationFrame(tick);
-        }
+        rafId = window.requestAnimationFrame(tick);
     }
 
     // --- Interactive Hackathons Split Stage + Interactive SVG Flowcharts ---
